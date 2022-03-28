@@ -1,0 +1,24 @@
+$theme-colors: (
+  "primary": #3282F7,
+  "danger": #ED6454,
+  "success": #68D9A4,
+  "light": #E7E7E7
+);
+
+.header {
+    margin: 25px auto;
+    & img {
+        width: 20%;
+    }
+}
+
+.section {
+    margin: 25px auto;
+}
+
+.filterbar {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}

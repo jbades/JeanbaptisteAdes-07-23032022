@@ -1,0 +1,60 @@
+.gallery {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: stretch;
+    gap: 2%;
+}
+
+.searchbar {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+    & i {
+        cursor: pointer;
+        text-align: right;
+        font-size: 25px;
+    }
+}
+
+.recipe-card {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 32%;
+    height: 364px;
+    &__body {
+        padding: 20px;
+    }
+    &__description {
+        display: -webkit-box !important;
+        -webkit-line-clamp: 10;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        white-space: normal;
+        text-overflow: ellipsis;
+        }
+    &__img {
+        height: 178px;
+        width: 100%;
+        background-color: #C7BEBE;
+    }
+    &__row1 {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        & i {
+            font-size: 20px;
+        }
+    }
+    &__row2 {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+    }
+    &__title {
+        font-size: 20px;
+    }
+}
