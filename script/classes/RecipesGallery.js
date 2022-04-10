@@ -10,7 +10,6 @@ export default class RecipesGallery
     display()
     {
         let html = '';
-        console.log(this.all);
         this.all.forEach((recipe) =>
         {
             html += recipe.displayRecipe();

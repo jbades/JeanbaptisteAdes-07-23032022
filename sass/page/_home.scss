@@ -2,7 +2,7 @@
     display: flex;
     flex-flow: row wrap;
     align-items: stretch;
-    gap: 2%;
+    gap: 30px;
 }
 
 .searchbar {
@@ -21,10 +21,11 @@
 .recipe-card {
     display: flex;
     flex-flow: column nowrap;
-    width: 32%;
+    width: 380px;
     height: 364px;
     &__body {
         padding: 20px;
+        background-color: #E7E7E7;
     }
     &__description {
         display: -webkit-box !important;
@@ -35,8 +36,8 @@
         text-overflow: ellipsis;
         }
     &__img {
-        height: 178px;
         width: 100%;
+        min-height: 178px;
         background-color: #C7BEBE;
     }
     &__row1 {
@@ -48,13 +49,15 @@
         & i {
             font-size: 20px;
         }
+        & span {
+            & span {
+                font-weight: 600;
+            }
+        }
     }
     &__row2 {
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
-    }
-    &__title {
-        font-size: 20px;
     }
 }

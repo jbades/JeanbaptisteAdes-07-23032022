@@ -1,0 +1,5 @@
+11/04/22: 
+- bootstrap: node-module bien installé ?
+- 'gap' not working
+- objets : comment savoir en amont de projet si besoin de le créer ou non (ex : ingredients) ? Seulement quand nécessaire ?
+- algorigramme du projet : algorigramme des tests réalisés et leur ordre ? Pas un algorigramme fonctionnel ?

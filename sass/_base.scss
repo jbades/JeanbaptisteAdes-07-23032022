@@ -5,6 +5,10 @@ $theme-colors: (
   "light": #E7E7E7
 );
 
+html {
+    font-size: 12px;
+}
+
 .header {
     margin: 25px auto;
     & img {
@@ -17,8 +21,25 @@ $theme-colors: (
 }
 
 .filterbar {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
+    gap: 20px;
+}
+
+.btn-wrapper {
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 25px 15px;
+}
+
+.filter-btn {
+    width: 140px;
+    height: 19px;
+    & span {
+        font-weight: 700;
+        font-size: 18px;
+    }
+}
+
+.no-h-padding {
+    padding-right: 0;
+    padding-left: 0;
 }
