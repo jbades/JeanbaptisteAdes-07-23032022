@@ -8,14 +8,13 @@ export default class FilterByIngredient
 
     collect()
     {
-        let list = [];
-        // let list = new Set();
+        let list = new Set();
 
         this.gallery.all.forEach(recipe => 
         {
             recipe.ingredients.forEach(ingObject => 
                 {
-                    list.all.push(ingObject.ingredient);
+                    list.add(ingObject.ingredient);
                 });
         });
         console.log(list);
