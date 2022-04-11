@@ -3,20 +3,18 @@ export default class FilterByIngredient
     constructor(gallery)
     {
         this.gallery = gallery;
-        // this.all = new Set();
+        this.all = new Set();
     }
 
     collect()
     {
-        let list = new Set();
-
         this.gallery.all.forEach(recipe => 
         {
             recipe.ingredients.forEach(ingObject => 
                 {
-                    list.add(ingObject.ingredient);
+                    this.all.add(ingObject.ingredient);
                 });
         });
-        console.log(list);
+        console.log(this.all);
     }
 }
