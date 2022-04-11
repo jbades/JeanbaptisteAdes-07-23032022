@@ -36,7 +36,7 @@ export default class Recipe
             }
             else if (!item.quantity && !item.unit)
             {
-                ingredientHTML += item.ingredient + `: ` + item.quantity + ` ` + item.unit + `<br/>`;
+                ingredientHTML += item.ingredient + `<br/>`;
             }
         });
 

@@ -9,6 +9,8 @@
   },
   "author": "jbades",
   "license": "ISC",
-  "browserslist": "last 4 versions"
- 
+  "browserslist": "last 4 versions",
+  "dependencies": {
+    "bootstrap": "^5.1.3"
+  }
 }

@@ -4,16 +4,6 @@ export default class FilterBy
     {
         this.gallery = gallery;
         this.all = new Set();
-        this.filterName = {
-            ingredient: 'Ingrédients',
-            appliance: 'Appareils',
-            ustensils: 'Ustensils'
-        }
-        this.filterPlaceholder = {
-            ingredient: 'Rechercher un ingrédient',
-            appliance: 'Rechercher un appareil',
-            ustensils: 'Rechercher un ustensil'
-        }
     }
 
     buildDropdown(item)
@@ -22,7 +12,7 @@ export default class FilterBy
         `
             <div class="btn-wrapper bg-primary text-white">
                 <div class="d-flex flex-row flex-nowrap justify-content-between align-items-center filter-btn">
-                    <span>${this.filterName[item]}</span>
+                    <span>Ingrédients</span>
                     <i class="fa fa-chevron-down" aria-hidden="true"></i> 
                 </div>
                 <div class="d-flex flex-column flex-nowrap hidden-btn">
@@ -31,7 +21,7 @@ export default class FilterBy
                             id="search-${item}>"
                             name="search-${item}"
                             class=""
-                            placeholder="${this.filterPlaceholder[item]}"
+                            placeholder="Rechercher un ingrédient"
                         />
                         <i class="fa fa-chevron-up" aria-hidden="true"></i> 
                     </div>
