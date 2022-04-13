@@ -5,10 +5,6 @@ $theme-colors: (
   "light": #E7E7E7
 );
 
-html {
-    font-size: 12px;
-}
-
 .header {
     margin: 25px auto;
     & img {
@@ -16,30 +12,44 @@ html {
     }
 }
 
-.section {
-    margin: 25px auto;
+html {
+    font-size: 12px;
 }
 
-.filterbar {
-    gap: 20px;
-}
-
-.btn-wrapper {
-    cursor: pointer;
-    border-radius: 5px;
-    padding: 25px 15px;
-}
-
-.filter-btn {
-    width: 140px;
-    height: 19px;
-    & span {
-        font-weight: 700;
-        font-size: 18px;
+input {
+    &[id="searchzone"]{
+        &::placeholder {
+            color:rgba(0,0,0,0.25);
+        }
+    }
+    &[id="search-ingredient"]{
+        &::placeholder {
+            color:rgba(255,255,255,0.75);
+        }
+    }
+    &:focus {
+        outline: none !important;
     }
 }
 
-.no-h-padding {
-    padding-right: 0;
-    padding-left: 0;
+.forced-placeholder::placeholder {
+    color:rgba(255,255,255,0.75);
+}
+
+.filter {
+    &__bar {
+        gap: 20px;
+    }
+    &__btn {
+        width: 140px;
+        height: 19px;
+    }
+    &__welcome {
+        cursor: pointer;
+        padding: 20px;
+    }
+}
+
+.section {
+    margin: 30px auto;
 }

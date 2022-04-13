@@ -6,5 +6,4 @@ let gallery = new RecipesGallery();
 gallery.hydrate(recipes);
 gallery.display();
 let filter = new FilterBy(gallery);
-filter.buildDropdown();
-filter.collect();
+filter.start();

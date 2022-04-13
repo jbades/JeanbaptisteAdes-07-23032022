@@ -41,19 +41,19 @@ export default class Recipe
         });
 
         return `
-                    <div class="recipe-card card">
+                    <div class="recipe-card card d-flex flex-column flex-nowrap">
                         <div src="#" class="recipe-card__img"></div>
-                        <div class="recipe-card__body">
-                            <div class="recipe-card__row1">
-                                <span class="col-6 recipe-card__title no-h-padding">${this.name}</span>
-                                <span>
-                                    <i class="col-6 fa fa-clock-o no-h-padding" aria-hidden="true"></i>
-                                    <span>${this.time} min</span>
+                        <div class="recipe-card__body h-100">
+                            <div class="recipe-card__row1 d-flex flex-row flex-nowrap align-items-center">
+                                <h4 class="col-9 recipe-card__title p-0">${this.name}</h4>
+                                <span class="col-3 d-flex flex-row flex-nowrap align-items-center">
+                                    <i class="col-3 fa fa-clock-o p-0" aria-hidden="true"></i>
+                                    <span class="col-9">${this.time} min</span>
                                 </span>
                             </div>
-                            <div class="recipe-card__row2">
-                                <div class="col-6 recipe-card__ingredients no-h-padding">${ingredientHTML}</div>
-                                <div class="col-6 recipe-card__description  no-h-padding text-truncate text-truncate--5">${this.description}</div>
+                            <div class="recipe-card__row2 d-flex flex-row flex-nowrap justify-content-between">
+                                <div class="col-6 recipe-card__ingredients p-0">${ingredientHTML}</div>
+                                <div class="col-6 recipe-card__description  p-0 text-truncate text-truncate--5">${this.description}</div>
                             </div>
                         </div>
                     </div>
