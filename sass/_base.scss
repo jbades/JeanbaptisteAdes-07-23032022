@@ -21,10 +21,16 @@ input {
         &::placeholder {
             color:rgba(0,0,0,0.25);
         }
+        &:focus {
+            outline: none !important;
+        }
     }
     &[id="search-ingredient"]{
         &::placeholder {
             color:rgba(255,255,255,0.75);
+        }
+        &:focus {
+            outline: none !important;
         }
     }
     &:focus {
@@ -33,16 +39,27 @@ input {
 }
 
 .forced-placeholder::placeholder {
-    color:rgba(255,255,255,0.75);
+    color:rgba(255,255,255,0.75) !important;
 }
 
 .filter {
     &__bar {
         gap: 20px;
+        position: relative;
     }
     &__btn {
         width: 140px;
         height: 19px;
+    }
+    &__clicked {
+            width: inherit;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+    }
+    &__item-list {
+        max-height: 50vh;
+        margin-top: 10px;
     }
     &__welcome {
         cursor: pointer;

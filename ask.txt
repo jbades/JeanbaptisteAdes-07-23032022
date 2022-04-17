@@ -8,3 +8,5 @@
 - placeholder _base.scss (l25)
 -  listenExitFilter() (l61)
 - listenEsc() (l70)
+- après problème avec bootstrap, puis git : css placeholder pas pris en compte (l41)
+- array.sort() : ne fonctionne pas (l7)

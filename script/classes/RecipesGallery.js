@@ -4,25 +4,30 @@ export default class RecipesGallery
 {
     constructor()
     {
-        this.all = []
-    }
+        this.recipes = [];
+   }
 
     display()
     {
-        let html = '';
-        this.all.forEach((recipe) =>
+        let recipesHTML = '';
+        this.recipes.forEach((recipe) =>
         {
-            html += recipe.displayRecipe();
+            recipesHTML += recipe.display(recipe);
         });
-        document.querySelector('.gallery').innerHTML = html;
+        document.querySelector('.gallery').innerHTML = recipesHTML;
     }
 
     hydrate(data)
     {
         data.forEach((recipe) => 
         {
-            let newRecipe = new Recipe(recipe);
-            this.all.push(newRecipe);
+           this.recipes.push(new Recipe(recipe));
         });
+    }
+
+    start(data)
+    {
+        this.hydrate(data);
+        this.display();
     }
 }
