@@ -4,5 +4,5 @@ import FilterBy from "../classes/FilterBy.js"
 
 let gallery = new RecipesGallery();
 gallery.start(recipes);
-// let filter = new FilterBy(gallery);
-// filter.start();
+let filter = new FilterBy(gallery);
+filter.start();

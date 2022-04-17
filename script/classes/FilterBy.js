@@ -1,3 +1,4 @@
+import Ingredient from "./Ingredient.js";
 import Recipe from "./Recipe.js";
 
 export default class FilterBy
@@ -6,9 +7,7 @@ export default class FilterBy
     {
         this.gallery = gallery;
         this.all = new Set();
-        this.all2 = [...(this.all)].sort();
-        console.log(this.all);
-        console.log(this.all2);
+        // this.all2 = [...(this.all)].sort();
         this.item =
         {
             name: 'ingredient',
@@ -53,13 +52,14 @@ export default class FilterBy
 
     collect()
     {
-        this.gallery.all.forEach(recipe => 
+        console.log(this.gallery);
+        this.gallery.gallery.forEach(recipe => 
         {
             recipe.ingredients.forEach(ingObject => 
                 {
                     this.all.add(ingObject.ingredient);
                 });
-            });
+        });
     }
 
     listenFilter()

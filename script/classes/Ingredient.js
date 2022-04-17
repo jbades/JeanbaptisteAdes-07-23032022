@@ -12,19 +12,19 @@ export default class Ingredient
         let html = '';
         if (!!this.quantity && !!this.unit)
         {
-            html = this.ingredient + `: ` + this.quantity + ` ` + this.unit + `<br/>`;
+            html = this.ingredient + `: ` + this.quantity + ` ` + this.unit;
         } 
         else if (!this.quantity && !!this.unit)
         {
-            html = this.ingredient + `: ` + this.unit + `<br/>`;
+            html = this.ingredient + `: ` + this.unit;
         }
         else if (!!this.quantity && !this.unit)
         {
-            html = this.ingredient + `: ` + this.quantity + `<br/>`;
+            html = this.ingredient + `: ` + this.quantity;
         }
         else if (!this.quantity && !this.unit)
         {
-            html = this.ingredient + `<br/>`;
+            html = this.ingredient;
         }
         return html;
     }

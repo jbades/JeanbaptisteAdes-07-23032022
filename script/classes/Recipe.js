@@ -7,15 +7,19 @@ export default class Recipe
         this.id = recipe.id;
         this.name = recipe.name;
         this.servings = recipe.servings;
-        this.ingredients = recipe.ingredients;
-        this.ingredients2 = [];
+        this.ingredients = [];
+        recipe.ingredients.forEach(ingredient =>
+        {
+            let ingr = new Ingredient(ingredient);
+            this.ingredients.push(ingr);
+        });
         this.time = recipe.time;
         this.description = recipe.description;
         this.appliance = recipe.appliance;
         this.ustensils = recipe.ustensils;
     }
 
-    display(recipe)
+   display()
     {
         return `
                     <div class="recipe-card card d-flex flex-column flex-nowrap">
@@ -29,7 +33,7 @@ export default class Recipe
                                 </span>
                             </div>
                             <div class="recipe-card__row2 d-flex flex-row flex-nowrap justify-content-between">
-                                <div class="col-6 recipe-card__ingredients p-0">${this.displayIngredients(recipe)}</div>
+                                <div class="col-6 recipe-card__ingredients p-0">${this.displayIngredients()}</div>
                                 <div class="col-6 recipe-card__description  p-0 text-truncate text-truncate--5">${this.description}</div>
                             </div>
                         </div>
@@ -37,15 +41,18 @@ export default class Recipe
                 `
     }
 
-    displayIngredients(recipe)
+    displayIngredients()
     {
         let html = '';
-        recipe.ingredients.forEach(ingredient =>
+        this.ingredients.forEach(ingredient =>
         {
-            let ingr = new Ingredient(ingredient);
-            // this.ingredients.push(ingr);
-            html += ingr.display();
+            html += ingredient.display() + '<br>';
         });
         return html;
+    }
+
+    getIngredients()
+    {
+        return this.ingredients;
     }
 }

@@ -4,13 +4,13 @@ export default class RecipesGallery
 {
     constructor()
     {
-        this.recipes = [];
+        this.gallery = [];
    }
 
     display()
     {
         let recipesHTML = '';
-        this.recipes.forEach((recipe) =>
+        this.gallery.forEach((recipe) =>
         {
             recipesHTML += recipe.display(recipe);
         });
@@ -21,7 +21,7 @@ export default class RecipesGallery
     {
         data.forEach((recipe) => 
         {
-           this.recipes.push(new Recipe(recipe));
+           this.gallery.push(new Recipe(recipe));
         });
     }
 
