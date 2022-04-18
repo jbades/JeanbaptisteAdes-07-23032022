@@ -52,10 +52,13 @@ input {
         height: 19px;
     }
     &__clicked {
-            width: inherit;
+        width: inherit;
         position: absolute;
         z-index: 1;
         top: 0;
+    }
+    &__item {
+        cursor: pointer;
     }
     &__item-list {
         max-height: 50vh;

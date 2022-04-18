@@ -6,12 +6,16 @@ export default class FilterBy
     constructor(gallery)
     {
         this.gallery = gallery;
-        this.all = new Set();
-        // this.all2 = [...(this.all)].sort();
+        this.itemList = new Set();
+        this.itemList2 = [...(this.itemList)].sort();
+        console.log(this.itemList2);
+        this.itemList3 = Array.from(this.itemList).sort();
+        console.log(this.itemList3);
         this.item =
         {
             name: 'ingredient',
-            heading: 'Ingrédients'
+            heading: 'Ingrédients',
+            placeholder: 'Rechercher un ingrédient'
         };
     }
 
@@ -29,7 +33,7 @@ export default class FilterBy
                         id="search-${this.item.name}>"
                         name="search-${this.item.name}"
                         class="forced-placeholder text-light w-75 bg-transparent border-0"
-                        placeholder="Rechercher un ingrédient"
+                        placeholder="${this.item.placeholder}"
                     />
                     <i class="exit-filter fa fa-chevron-up" aria-hidden="true"></i> 
                 </div>
@@ -42,22 +46,21 @@ export default class FilterBy
     buildDropdownList()
     {
         let html = '';
-        this.all.forEach(item => 
+        this.itemList.forEach(item => 
         {
             html += `<div class="filter__item">${item}</div>`;
-            this.listenItem(item);
+            // this.listenItem();
         });
         return html;
     }
 
     collect()
     {
-        console.log(this.gallery);
         this.gallery.gallery.forEach(recipe => 
         {
-            recipe.ingredients.forEach(ingObject => 
+            recipe.ingredients.forEach(ingredient => 
                 {
-                    this.all.add(ingObject.ingredient);
+                    this.itemList.add(ingredient.ingredient);
                 });
         });
     }
@@ -69,16 +72,17 @@ export default class FilterBy
             document.querySelector('.filter__welcome').classList.add('d-none');
             document.querySelector('.filter__clicked').classList.remove('d-none');
             this.listenExitFilter();
+            this.listenEsc();
         });
     }
 
-    listenExitFilter()
+    listenFilterSearch()
     {
-        document.querySelector('.exit-filter').addEventListener('click', () => 
+        document.querySelector(`#search-${this.item.name}`).addEventListener('input', (item) => 
         {
-            document.querySelector('.filter__welcome').classList.remove('d-none');
-            document.querySelector('.filter__clicked').classList.add('d-none');
-       });
+            this.itemList.filter(ingredient => ingredient == item.target.value);
+            this.buildDropdownList();
+        });
     }
 
     listenEsc()
@@ -90,19 +94,30 @@ export default class FilterBy
           });
     }
 
-    listenItem(item)
+    listenExitFilter()
     {
-        // document.querySelector('.filter__item').addEventListener('click',() => 
-        // {
-        //     let toto = this.all.ingredientfind();
-        // });
+        document.querySelector('.exit-filter').addEventListener('click', () => 
+        {
+            document.querySelector('.filter__welcome').classList.remove('d-none');
+            document.querySelector('.filter__clicked').classList.add('d-none');
+       });
+    }
+
+    listenItem()
+    {
+        document.querySelector('.filter__item').addEventListener('click', (item) => 
+        {
+            this.itemList.filter(ingredient => ingredient == item.target.value);
+            this.buildDropdownList();
+        });
     }
 
     start()
     {
         this.collect();
-        this.buildDropdown();
         this.buildDropdownList();
+        this.buildDropdown();
         this.listenFilter();
+        this.listenFilterSearch();
     }
 }
