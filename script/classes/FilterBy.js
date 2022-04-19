@@ -7,10 +7,6 @@ export default class FilterBy
     {
         this.gallery = gallery;
         this.itemList = new Set();
-        this.itemList2 = [...(this.itemList)].sort();
-        console.log(this.itemList2);
-        this.itemList3 = Array.from(this.itemList).sort();
-        console.log(this.itemList3);
         this.item =
         {
             name: 'ingredient',
@@ -30,14 +26,14 @@ export default class FilterBy
             <div class="filter__clicked d-flex flex-column flex-nowrap d-none bg-primary text-white rounded p-3">
                 <div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
                     <input
-                        id="search-${this.item.name}>"
+                        id="search-${this.item.name}"
                         name="search-${this.item.name}"
                         class="forced-placeholder text-light w-75 bg-transparent border-0"
                         placeholder="${this.item.placeholder}"
                     />
                     <i class="exit-filter fa fa-chevron-up" aria-hidden="true"></i> 
                 </div>
-                <div class="filter__item-list d-flex flex-column flex-wrap">${this.buildDropdownList()}</div>
+                <div class="filter__item-list d-flex flex-column flex-wrap"></div>
             </div>
         `;
         document.querySelector('.filter__bar').innerHTML = html;
@@ -56,32 +52,47 @@ export default class FilterBy
 
     collect()
     {
-        this.gallery.gallery.forEach(recipe => 
+        this.gallery.recipeList.forEach(recipe => 
         {
-            recipe.ingredients.forEach(ingredient => 
+            recipe.ingredientList.forEach(ingredient => 
                 {
                     this.itemList.add(ingredient.ingredient);
                 });
         });
+        this.itemList = [...(this.itemList)].sort();
     }
 
-    listenFilter()
+    displayItems()
+    {
+        document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
+    }
+
+    listenForDropdownOpen()
     {
         document.querySelector('.filter__welcome').addEventListener('click', () => 
         {
-            document.querySelector('.filter__welcome').classList.add('d-none');
-            document.querySelector('.filter__clicked').classList.remove('d-none');
+            this.showClickedFilter();
+            document.querySelector(`#search-${this.item.name}`).focus();
             this.listenExitFilter();
             this.listenEsc();
+            this.listenForInput();
+            this.buildDropdownList();
         });
     }
 
-    listenFilterSearch()
+    listenForInput()
     {
-        document.querySelector(`#search-${this.item.name}`).addEventListener('input', (item) => 
+        document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
         {
-            this.itemList.filter(ingredient => ingredient == item.target.value);
-            this.buildDropdownList();
+            const needle = e.target.value;
+            const haystack = [...(this.itemList)];
+
+            let result = haystack.filter(ingredient => 
+                {
+                    return (ingredient.toLowerCase()).includes(needle.toLowerCase());
+                });
+            this.itemList = new Set(result);
+            console.log(this.itemList);
         });
     }
 
@@ -89,7 +100,7 @@ export default class FilterBy
     {
         document.addEventListener('keydown', (e) => {
             if (e.key === "Escape") {
-              this.listenExitFilter();
+              this.hideClickedFilter();
             };
           });
     }
@@ -98,9 +109,8 @@ export default class FilterBy
     {
         document.querySelector('.exit-filter').addEventListener('click', () => 
         {
-            document.querySelector('.filter__welcome').classList.remove('d-none');
-            document.querySelector('.filter__clicked').classList.add('d-none');
-       });
+            this.hideClickedFilter();
+        });
     }
 
     listenItem()
@@ -112,12 +122,23 @@ export default class FilterBy
         });
     }
 
+    showClickedFilter ()
+    {
+        document.querySelector('.filter__welcome').classList.add('d-none');
+        document.querySelector('.filter__clicked').classList.remove('d-none');
+    }
+
+    hideClickedFilter ()
+    {
+        document.querySelector('.filter__welcome').classList.remove('d-none');
+        document.querySelector('.filter__clicked').classList.add('d-none');
+    }
+
     start()
     {
         this.collect();
-        this.buildDropdownList();
         this.buildDropdown();
-        this.listenFilter();
-        this.listenFilterSearch();
+        this.displayItems();
+        this.listenForDropdownOpen();
     }
 }

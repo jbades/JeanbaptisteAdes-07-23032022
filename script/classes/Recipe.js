@@ -7,11 +7,11 @@ export default class Recipe
         this.id = recipe.id;
         this.name = recipe.name;
         this.servings = recipe.servings;
-        this.ingredients = [];
+        this.ingredientList = [];
         recipe.ingredients.forEach(ingredient =>
         {
             let ingr = new Ingredient(ingredient);
-            this.ingredients.push(ingr);
+            this.ingredientList.push(ingr);
         });
         this.time = recipe.time;
         this.description = recipe.description;
@@ -44,7 +44,7 @@ export default class Recipe
     displayIngredients()
     {
         let html = '';
-        this.ingredients.forEach(ingredient =>
+        this.ingredientList.forEach(ingredient =>
         {
             html += ingredient.display() + '<br>';
         });
@@ -53,6 +53,6 @@ export default class Recipe
 
     getIngredients()
     {
-        return this.ingredients;
+        return this.ingredientList;
     }
 }
