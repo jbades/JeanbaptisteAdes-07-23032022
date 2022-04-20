@@ -65,6 +65,20 @@ export default class Recipe
         return included;
     }
 
+    searchIngredients(e)
+    {
+        this.ingredientList.forEach(ingredient =>
+            {
+                if(ingredient.searchIngredient(e))
+                {
+                    return true;
+                } else 
+                {
+                    return false;
+                }
+            });
+    }
+
     searchName(e)
     {
         const needle = e.target.value;

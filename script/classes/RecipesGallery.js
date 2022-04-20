@@ -34,7 +34,7 @@ export default class RecipesGallery
             this.filteredRecipeList = [];
             this.recipeList.forEach((recipe) =>
             {
-                if (recipe.searchName(el) || recipe.searchDescription(el))
+                if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
                 {
                     this.filteredRecipeList.push(recipe);
                 };

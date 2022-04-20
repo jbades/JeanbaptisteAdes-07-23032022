@@ -28,4 +28,14 @@ export default class Ingredient
         }
         return html;
     }
+
+    searchIngredient(e)
+    {
+        const needle = e.target.value;
+        const haystack = this.ingredient.toLowerCase();
+        console.log(needle, haystack);
+
+        let included = haystack.includes(needle.toLowerCase());
+        return included;
+    }
 }
