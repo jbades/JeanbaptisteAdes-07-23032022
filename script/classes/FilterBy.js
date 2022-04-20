@@ -7,6 +7,7 @@ export default class FilterBy
     {
         this.gallery = gallery;
         this.itemList = new Set();
+        this.filteredList = [];
         this.item =
         {
             name: 'ingredient',
@@ -42,10 +43,9 @@ export default class FilterBy
     buildDropdownList()
     {
         let html = '';
-        this.itemList.forEach(item => 
+        this.filteredList.forEach(item => 
         {
             html += `<div class="filter__item">${item}</div>`;
-            // this.listenItem();
         });
         return html;
     }
@@ -59,7 +59,8 @@ export default class FilterBy
                     this.itemList.add(ingredient.ingredient);
                 });
         });
-        this.itemList = [...(this.itemList)].sort();
+        this.itemList = [...(this.itemList)].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        this.filteredList = this.itemList;
     }
 
     displayItems()
@@ -67,16 +68,33 @@ export default class FilterBy
         document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
     }
 
-    listenForDropdownOpen()
+    filterItems(e)
+    {
+        const needle = e.target.value;
+        const haystack = [...(this.itemList)];
+
+        let result = haystack.filter(ingredient => 
+            {
+                return (ingredient.toLowerCase()).includes(needle.toLowerCase());
+            });
+        this.filteredList = new Set(result);
+    }
+
+    hideClickedFilter ()
+    {
+        document.querySelector('.filter__welcome').classList.remove('d-none');
+        document.querySelector('.filter__clicked').classList.add('d-none');
+    }
+
+    listenForDropdownToOpen()
     {
         document.querySelector('.filter__welcome').addEventListener('click', () => 
         {
             this.showClickedFilter();
             document.querySelector(`#search-${this.item.name}`).focus();
+            this.listenForInput();
             this.listenExitFilter();
             this.listenEsc();
-            this.listenForInput();
-            this.buildDropdownList();
         });
     }
 
@@ -84,15 +102,8 @@ export default class FilterBy
     {
         document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
         {
-            const needle = e.target.value;
-            const haystack = [...(this.itemList)];
-
-            let result = haystack.filter(ingredient => 
-                {
-                    return (ingredient.toLowerCase()).includes(needle.toLowerCase());
-                });
-            this.itemList = new Set(result);
-            console.log(this.itemList);
+            this.filterItems(e);
+            this.displayItems();
         });
     }
 
@@ -115,10 +126,11 @@ export default class FilterBy
 
     listenItem()
     {
-        document.querySelector('.filter__item').addEventListener('click', (item) => 
-        {
-            this.itemList.filter(ingredient => ingredient == item.target.value);
-            this.buildDropdownList();
+        document.querySelectorAll('.filter__item').forEach(el => {
+            el.addEventListener('click', () =>
+            {
+                console.log("coucou");
+            });
         });
     }
 
@@ -128,17 +140,12 @@ export default class FilterBy
         document.querySelector('.filter__clicked').classList.remove('d-none');
     }
 
-    hideClickedFilter ()
-    {
-        document.querySelector('.filter__welcome').classList.remove('d-none');
-        document.querySelector('.filter__clicked').classList.add('d-none');
-    }
-
     start()
     {
         this.collect();
         this.buildDropdown();
         this.displayItems();
-        this.listenForDropdownOpen();
+        this.listenForDropdownToOpen();
+        this.listenItem();
     }
 }

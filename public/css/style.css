@@ -10767,7 +10767,7 @@ input:focus {
   cursor: pointer;
 }
 .filter__item-list {
-  max-height: 50vh;
+  max-height: 65vh;
   margin-top: 10px;
 }
 .filter__welcome {

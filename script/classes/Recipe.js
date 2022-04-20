@@ -55,4 +55,22 @@ export default class Recipe
     {
         return this.ingredientList;
     }
+
+    searchDescription(e)
+    {
+        const needle = e.target.value;
+        const haystack = this.description.toLowerCase();
+
+        let included = haystack.includes(needle.toLowerCase());
+        return included;
+    }
+
+    searchName(e)
+    {
+        const needle = e.target.value;
+        const haystack = this.name.toLowerCase();
+
+        let included = haystack.includes(needle.toLowerCase());
+        return included;
+    }
 }
