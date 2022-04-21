@@ -10745,10 +10745,6 @@ input:focus {
   outline: none !important;
 }
 
-.forced-placeholder::placeholder {
-  color: rgba(255, 255, 255, 0.75) !important;
-}
-
 .filter__bar {
   gap: 20px;
   position: relative;
@@ -10764,15 +10760,16 @@ input:focus {
   top: 0;
 }
 .filter__item {
-  background-color: transparent;
   color: inherit;
-  border: none;
   text-align: left;
   cursor: pointer;
 }
 .filter__item-list {
   max-height: 65vh;
   margin-top: 10px;
+}
+.filter__tag {
+  gap: 10px;
 }
 .filter__welcome {
   cursor: pointer;
@@ -10782,6 +10779,13 @@ input:focus {
 
 .section {
   margin: 30px auto;
+}
+
+.tag__icon {
+  font-size: 18px !important;
+}
+.tag__wrapper {
+  gap: 10px;
 }
 
 .gallery {

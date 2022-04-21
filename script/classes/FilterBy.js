@@ -44,7 +44,7 @@ export default class FilterBy
         let html = '';
         this.filteredItems.forEach(item => 
         {
-            html += `<button class="filter__item">${item}</button>`;
+            html += `<button class="filter__item border-0 bg-transparent">${item}</button>`;
         });
         return html;
     }
@@ -118,12 +118,14 @@ export default class FilterBy
 
     listenEsc()
     {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape") {
+        document.addEventListener('keydown', (e) =>
+        {
+            if (e.key === "Escape")
+            {
                 this.resetList();
                 // this.hideClickedFilter();
             };
-          });
+        });
     }
 
     listenExitFilter()
@@ -140,19 +142,35 @@ export default class FilterBy
         {
             el.addEventListener('click', (e) =>
             {
-                console.log(e);
+                const needle = e.target.innerHTML;
+
+                let html =
+                `
+                        <div class="tag__text text-white bg-transparent border-0">${needle}</div>
+                        <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
+                `
+                let div = document.createElement('div');
+                div.classList.add('tag__wrapper', 'd-flex', 'flex-row', 'flex-nowrap', 'align-items-center', 'bg-primary', 'rounded', 'p-3');
+                div.innerHTML = html;
+                document.querySelector('.filter__tag').appendChild(div);
+
+                let index = this.filteredItems.indexOf(needle);
+                this.filteredItems.splice(index, 1);
+                this.displayItems();
             });
         });
     }
 
     resetList()
     {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape") {
+        document.addEventListener('keydown', (e) =>
+        {
+            if (e.key === "Escape")
+            {
                 document.querySelector(`#search-${this.item.name}`).value = '';
                 this.filteredItems = this.itemList;
                 this.displayItems();
-                };
+            };
         });
     }
 

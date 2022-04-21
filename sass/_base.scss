@@ -38,9 +38,9 @@ input {
     }
 }
 
-.forced-placeholder::placeholder {
-    color:rgba(255,255,255,0.75) !important;
-}
+// .forced-placeholder::placeholder {
+//     color:rgba(255,255,255,0.75) !important;
+// }
 
 .filter {
     &__bar {
@@ -58,15 +58,16 @@ input {
         top: 0;
     }
     &__item {
-        background-color: transparent;
         color: inherit;
-        border: none;
         text-align: left;
         cursor: pointer;
     }
     &__item-list {
         max-height: 65vh;
         margin-top: 10px;
+    }
+    &__tag {
+        gap: 10px;
     }
     &__welcome {
         cursor: pointer;
@@ -77,4 +78,13 @@ input {
 
 .section {
     margin: 30px auto;
+}
+
+.tag {
+    &__icon {
+        font-size: 18px !important;
+    }
+    &__wrapper {
+        gap: 10px;
+    }
 }

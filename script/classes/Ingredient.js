@@ -7,18 +7,6 @@ export default class Ingredient
         this.unit = ingredient.unit;
     }
 
-    createTag()
-    {
-        let html =
-        `
-            <div class="tag__wrapper d-flex flex-row flex-nowrap align-items-center bg-primary text-white rounded p-3">
-                <button class="tag__text">${this.ingredient}</button>
-                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-            <di>
-        `
-        document.querySelector('.filter__tag').appendChild(html); 
-    }
-
     display()
     {
         let html = '';
