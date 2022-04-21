@@ -58,6 +58,10 @@ input {
         top: 0;
     }
     &__item {
+        background-color: transparent;
+        color: inherit;
+        border: none;
+        text-align: left;
         cursor: pointer;
     }
     &__item-list {
@@ -67,6 +71,7 @@ input {
     &__welcome {
         cursor: pointer;
         padding: 20px;
+        border: none;
     }
 }
 

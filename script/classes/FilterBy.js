@@ -1,10 +1,12 @@
+import Ingredient from "./Ingredient.js";
+
 export default class FilterBy
 {
     constructor(gallery)
     {
         this.gallery = gallery;
         this.itemList = new Set();
-        this.filteredList = [];
+        this.filteredItems = [];
         this.item =
         {
             name: 'ingredient',
@@ -17,10 +19,10 @@ export default class FilterBy
     {
         let html = 
         `
-            <div class="filter__welcome d-flex flex-row flex-nowrap justify-content-between align-items-center filter__btn bg-primary text-white rounded">
+            <button class="filter__welcome d-flex flex-row flex-nowrap justify-content-between align-items-center filter__btn bg-primary text-white rounded">
                 <span class="h5">${this.item.heading}</span>
                 <i class="fa fa-chevron-down" aria-hidden="true"></i> 
-            </div>
+            </button>
             <div class="filter__clicked d-flex flex-column flex-nowrap d-none bg-primary text-white rounded p-3">
                 <div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
                     <input
@@ -40,9 +42,9 @@ export default class FilterBy
     buildDropdownList()
     {
         let html = '';
-        this.filteredList.forEach(item => 
+        this.filteredItems.forEach(item => 
         {
-            html += `<div class="filter__item">${item}</div>`;
+            html += `<button class="filter__item">${item}</button>`;
         });
         return html;
     }
@@ -57,7 +59,7 @@ export default class FilterBy
                 });
         });
         this.itemList = [...(this.itemList)].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-        this.filteredList = this.itemList;
+        this.filteredItems = this.itemList;
     }
 
     displayItems()
@@ -74,11 +76,12 @@ export default class FilterBy
             {
                 return (ingredient.toLowerCase()).includes(needle.toLowerCase());
             });
-        this.filteredList = new Set(result);
+        this.filteredItems = new Set(result);
     }
 
-    hideClickedFilter ()
+    async hideClickedFilter ()
     {
+        await this.resetList();
         document.querySelector('.filter__welcome').classList.remove('d-none');
         document.querySelector('.filter__clicked').classList.add('d-none');
     }
@@ -89,15 +92,24 @@ export default class FilterBy
         {
             this.showClickedFilter();
             document.querySelector(`#search-${this.item.name}`).focus();
-            this.listenForInput();
+            this.listenForFilter();
             this.listenExitFilter();
             this.listenEsc();
         });
     }
 
-    listenForInput()
+    listenForFilter()
     {
         document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
+        {
+            this.filterItems(e);
+            this.displayItems();
+        });
+    }
+
+    listenForSearchbar()
+    {
+        document.querySelector(`#searchzone`).addEventListener('input', (e) => 
         {
             this.filterItems(e);
             this.displayItems();
@@ -108,7 +120,8 @@ export default class FilterBy
     {
         document.addEventListener('keydown', (e) => {
             if (e.key === "Escape") {
-              this.hideClickedFilter();
+                this.resetList();
+                // this.hideClickedFilter();
             };
           });
     }
@@ -123,11 +136,23 @@ export default class FilterBy
 
     listenItem()
     {
-        document.querySelectorAll('.filter__item').forEach(el => {
-            el.addEventListener('click', () =>
+        document.querySelectorAll('.filter__item').forEach(el =>
+        {
+            el.addEventListener('click', (e) =>
             {
-                console.log("coucou");
+                console.log(e);
             });
+        });
+    }
+
+    resetList()
+    {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                document.querySelector(`#search-${this.item.name}`).value = '';
+                this.filteredItems = this.itemList;
+                this.displayItems();
+                };
         });
     }
 
@@ -143,6 +168,7 @@ export default class FilterBy
         this.buildDropdown();
         this.displayItems();
         this.listenForDropdownToOpen();
+        this.listenForSearchbar();
         this.listenItem();
     }
 }

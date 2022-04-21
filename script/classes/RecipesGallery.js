@@ -1,4 +1,5 @@
 import Recipe from "./Recipe.js";
+import FilterBy from "./FilterBy.js";
 
 export default class RecipesGallery
 {
@@ -34,7 +35,7 @@ export default class RecipesGallery
                 document.querySelector('#searchzone').value = '';
                 this.filteredRecipeList = this.recipeList;
                 this.display();
-            };
+                };
         });
     }
 

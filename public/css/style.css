@@ -10764,6 +10764,10 @@ input:focus {
   top: 0;
 }
 .filter__item {
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  text-align: left;
   cursor: pointer;
 }
 .filter__item-list {
@@ -10773,6 +10777,7 @@ input:focus {
 .filter__welcome {
   cursor: pointer;
   padding: 20px;
+  border: none;
 }
 
 .section {
