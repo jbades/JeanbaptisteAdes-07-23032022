@@ -17,6 +17,7 @@ export default class Recipe
         this.description = recipe.description;
         this.appliance = recipe.appliance;
         this.ustensils = recipe.ustensils;
+        this.searchTest = [];
     }
 
    display()
@@ -67,16 +68,12 @@ export default class Recipe
 
     searchIngredients(e)
     {
+        this.searchTest = [];
         this.ingredientList.forEach(ingredient =>
             {
-                if(ingredient.searchIngredient(e))
-                {
-                    return true;
-                } else 
-                {
-                    return false;
-                }
+                this.searchTest.push(ingredient.searchIngredient(e));
             });
+        return (this.searchTest.includes(true));
     }
 
     searchName(e)
