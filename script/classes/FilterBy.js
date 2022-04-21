@@ -1,6 +1,3 @@
-import Ingredient from "./Ingredient.js";
-import Recipe from "./Recipe.js";
-
 export default class FilterBy
 {
     constructor(gallery)

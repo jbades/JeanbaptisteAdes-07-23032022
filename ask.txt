@@ -9,3 +9,6 @@
 - listenEsc() (l70)
 - array.sort() : ne fonctionne pas (l7)
 - utilser this.ingredients plutôt que collect() ?
+
+26/04/22: 
+- listenEsc x2 dans 2 objets séparés => conflits ?

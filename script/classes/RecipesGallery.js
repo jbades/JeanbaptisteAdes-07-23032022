@@ -27,6 +27,17 @@ export default class RecipesGallery
         this.filteredRecipeList = this.recipeList;
     }
 
+    listenEsc()
+    {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                document.querySelector('#searchzone').value = '';
+                this.filteredRecipeList = this.recipeList;
+                this.display();
+            };
+        });
+    }
+
     search()
     {
         document.querySelector('#searchzone').addEventListener('input', (el) =>
@@ -48,5 +59,7 @@ export default class RecipesGallery
         this.hydrate(data);
         this.display();
         this.search();
+        this.listenEsc();
     }
+
 }

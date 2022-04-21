@@ -34,7 +34,6 @@ export default class Ingredient
         const needle = e.target.value;
         const haystack = this.ingredient.toLowerCase();
 
-        let included = haystack.includes(needle.toLowerCase());
-        return included;
+        return haystack.includes(needle.toLowerCase());
     }
 }
