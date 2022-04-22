@@ -39,6 +39,29 @@ export default class RecipesGallery
         });
     }
 
+    async listenFilterItem()
+    {
+        let toto = new FilterBy();
+        await toto.displayItems();
+        
+        document.querySelectorAll('.filter__item').forEach(el =>
+        {
+            el.addEventListener('click', (e) =>
+            {
+                // const needle = e.target.innerHTML;
+                this.filteredRecipeList = [];
+                this.recipeList.forEach((recipe) =>
+                {
+                    if (recipe.searchIngredients(e))
+                    {
+                        this.filteredRecipeList.push(recipe);
+                    };
+                });
+                this.display();
+            });
+        });
+    }
+
     search()
     {
         document.querySelector('#searchzone').addEventListener('input', (el) =>
@@ -60,6 +83,7 @@ export default class RecipesGallery
         this.hydrate(data);
         this.display();
         this.search();
+        // this.listenFilterItem();
         this.listenEsc();
     }
 

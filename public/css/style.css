@@ -10783,13 +10783,14 @@ input:focus {
 
 .tag__icon {
   font-size: 18px !important;
+  cursor: pointer;
 }
 .tag__wrapper {
   gap: 10px;
 }
 
 .gallery {
-  gap: 30px;
+  gap: 36px;
 }
 
 .searchbar {

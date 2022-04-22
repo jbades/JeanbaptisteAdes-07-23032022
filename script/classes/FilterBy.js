@@ -1,5 +1,3 @@
-import Ingredient from "./Ingredient.js";
-
 export default class FilterBy
 {
     constructor(gallery)
@@ -13,6 +11,15 @@ export default class FilterBy
             heading: 'Ingrédients',
             placeholder: 'Rechercher un ingrédient'
         };
+    }
+
+    addItemToList(ingr)
+    {
+        this.filteredItems.push(ingr);
+        this.filteredItems =  this.filteredItems.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        this.displayItems();
+        this.listenItem();
+        this.listenForSearchbar();
     }
 
     buildDropdown()
@@ -65,6 +72,20 @@ export default class FilterBy
     displayItems()
     {
         document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
+    }
+
+    displayTag(e)
+    {
+        let html =
+        `
+                <div class="tag__text text-white bg-transparent border-0">${e}</div>
+                <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
+        `
+        let div = document.createElement('div');
+        div.setAttribute('id', `${e}`);
+        div.classList.add('tag__wrapper', 'd-flex', 'flex-row', 'flex-nowrap', 'align-items-center', 'bg-primary', 'rounded', 'p-3');
+        div.innerHTML = html;
+        document.querySelector('.filter__tag').appendChild(div);
     }
 
     filterItems(e)
@@ -143,22 +164,34 @@ export default class FilterBy
             el.addEventListener('click', (e) =>
             {
                 const needle = e.target.innerHTML;
-
-                let html =
-                `
-                        <div class="tag__text text-white bg-transparent border-0">${needle}</div>
-                        <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
-                `
-                let div = document.createElement('div');
-                div.classList.add('tag__wrapper', 'd-flex', 'flex-row', 'flex-nowrap', 'align-items-center', 'bg-primary', 'rounded', 'p-3');
-                div.innerHTML = html;
-                document.querySelector('.filter__tag').appendChild(div);
-
-                let index = this.filteredItems.indexOf(needle);
-                this.filteredItems.splice(index, 1);
-                this.displayItems();
-            });
+                this.displayTag(needle);
+                this.removeItemFromList(needle);
+                this.listenTag(needle);
+                });
         });
+    }
+
+    listenTag(e)
+    {
+        document.querySelector(`#${e} .tag__icon`).addEventListener('click', () =>
+        {
+            this.addItemToList(e);
+            this.removeTag(e);
+        });
+    }
+
+    removeItemFromList(e)
+    {
+        let index = this.filteredItems.indexOf(e);
+        this.filteredItems.splice(index, 1);
+        this.displayItems();
+        this.listenItem();
+    }
+
+    removeTag(ingr)
+    {
+        let div = document.querySelector(`#${ingr}`);
+        div.parentNode.removeChild(div);
     }
 
     resetList()

@@ -11,7 +11,8 @@
 - utilser this.ingredients plutôt que collect() ?
 
 26/04/22: 
-- listenEsc x2 dans 2 objets séparés => conflits ?
-- async function
 - il va falloir développer le même projet sans objet ?
 - css/scss variables : &[id="search-ingredient"]
+- listenEsc x2 dans 2 objets séparés => conflits ?
+- width dropdownlist
+- async function : fonctionement + async function entre class/objets.

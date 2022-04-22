@@ -83,6 +83,7 @@ input {
 .tag {
     &__icon {
         font-size: 18px !important;
+        cursor: pointer;
     }
     &__wrapper {
         gap: 10px;
