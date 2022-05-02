@@ -16,3 +16,6 @@
 - listenEsc x2 dans 2 objets séparés => conflits ?
 - width dropdownlist
 - async function : fonctionement + async function entre class/objets.
+
+03/05/22: 
+- removeEventListener : ne fonctionne pas

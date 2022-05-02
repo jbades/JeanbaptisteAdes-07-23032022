@@ -69,6 +69,12 @@ export default class FilterBy
         this.filteredItems = this.itemList;
     }
 
+    contractDropdown ()
+    {
+        document.querySelector('.filter__welcome').classList.remove('d-none');
+        document.querySelector('.filter__clicked').classList.add('d-none');
+    }
+
     displayItems()
     {
         document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
@@ -88,6 +94,25 @@ export default class FilterBy
         document.querySelector('.filter__tag').appendChild(div);
     }
 
+   escapeFilter()
+    {
+        const callback = (event) =>
+        {
+            if (event.key === "Escape")
+            {
+                this.contractDropdown();
+                this.resetList();
+            };
+        };
+        return callback;
+    }
+
+    expandDropdown ()
+    {
+        document.querySelector('.filter__welcome').classList.add('d-none');
+        document.querySelector('.filter__clicked').classList.remove('d-none');
+    }
+
     filterItems(e)
     {
         const needle = e.target.value;
@@ -100,31 +125,39 @@ export default class FilterBy
         this.filteredItems = new Set(result);
     }
 
-    async hideClickedFilter ()
+    listenExitButton()
     {
-        await this.resetList();
-        document.querySelector('.filter__welcome').classList.remove('d-none');
-        document.querySelector('.filter__clicked').classList.add('d-none');
-    }
-
-    listenForDropdownToOpen()
-    {
-        document.querySelector('.filter__welcome').addEventListener('click', () => 
+        document.querySelector('.exit-filter').addEventListener('click', () => 
         {
-            this.showClickedFilter();
-            document.querySelector(`#search-${this.item.name}`).focus();
-            this.listenForFilter();
-            this.listenExitFilter();
-            this.listenEsc();
+            this.contractDropdown();
+            this.resetList();
         });
     }
 
-    listenForFilter()
+    listenEscToExitFilter()
+    {
+        document.addEventListener('keydown', this.escapeFilter());
+    }
+
+    listenForDropdownToExpand()
+    {
+        document.querySelector('.filter__welcome').addEventListener('click', () => 
+        {
+            this.expandDropdown();
+            document.querySelector(`#search-${this.item.name}`).focus();
+            this.listenExitButton()
+            this.listenEscToExitFilter();
+            this.listenForFilterSearch();
+        });
+    }
+
+    listenForFilterSearch()
     {
         document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
         {
             this.filterItems(e);
             this.displayItems();
+            this.removeEscToExitFilterListener();
         });
     }
 
@@ -134,26 +167,6 @@ export default class FilterBy
         {
             this.filterItems(e);
             this.displayItems();
-        });
-    }
-
-    listenEsc()
-    {
-        document.addEventListener('keydown', (e) =>
-        {
-            if (e.key === "Escape")
-            {
-                this.resetList();
-                // this.hideClickedFilter();
-            };
-        });
-    }
-
-    listenExitFilter()
-    {
-        document.querySelector('.exit-filter').addEventListener('click', () => 
-        {
-            this.hideClickedFilter();
         });
     }
 
@@ -180,6 +193,18 @@ export default class FilterBy
         });
     }
 
+    removeEscToExitFilterListener()
+    {
+       document.removeEventListener('keydown', this.listenEscToExitFilter());
+    }
+
+    resetList()
+    {
+        document.querySelector(`#search-${this.item.name}`).value = '';
+        this.filteredItems = this.itemList;
+        this.displayItems();
+    }
+
     removeItemFromList(e)
     {
         let index = this.filteredItems.indexOf(e);
@@ -194,31 +219,12 @@ export default class FilterBy
         div.parentNode.removeChild(div);
     }
 
-    resetList()
-    {
-        document.addEventListener('keydown', (e) =>
-        {
-            if (e.key === "Escape")
-            {
-                document.querySelector(`#search-${this.item.name}`).value = '';
-                this.filteredItems = this.itemList;
-                this.displayItems();
-            };
-        });
-    }
-
-    showClickedFilter ()
-    {
-        document.querySelector('.filter__welcome').classList.add('d-none');
-        document.querySelector('.filter__clicked').classList.remove('d-none');
-    }
-
     start()
     {
         this.collect();
         this.buildDropdown();
         this.displayItems();
-        this.listenForDropdownToOpen();
+        this.listenForDropdownToExpand();
         this.listenForSearchbar();
         this.listenItem();
     }
