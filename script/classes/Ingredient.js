@@ -1,3 +1,5 @@
+import Recipe from "./Recipe.js";
+
 export default class Ingredient
 {
     constructor(ingredient)
@@ -27,6 +29,12 @@ export default class Ingredient
             html = this.ingredient;
         }
         return html;
+    }
+
+    filter()
+    {
+        list = [];
+        
     }
 
     searchIngredient(e)

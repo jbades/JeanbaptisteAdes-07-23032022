@@ -2,24 +2,23 @@ export default class FilterBy
 {
     constructor(gallery)
     {
-        this.gallery = gallery;
-        this.itemList = new Set();
         this.filteredItems = [];
+        this.gallery = gallery;
         this.item =
         {
             name: 'ingredient',
             heading: 'Ingrédients',
             placeholder: 'Rechercher un ingrédient'
         };
+        this.itemList = new Set();
+        this.selection = [];
     }
 
-    addItemToList(ingr)
+    bringBackItemToList(ingr)
     {
         this.filteredItems.push(ingr);
         this.filteredItems =  this.filteredItems.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
         this.displayItems();
-        this.listenItem();
-        this.listenForSearchbar();
     }
 
     buildDropdown()
@@ -51,7 +50,7 @@ export default class FilterBy
         let html = '';
         this.filteredItems.forEach(item => 
         {
-            html += `<button class="filter__item border-0 bg-transparent">${item}</button>`;
+            html += `<button class="filter__item border-0 bg-transparent" data-id="${item}">${item}</button>`;
         });
         return html;
     }
@@ -78,6 +77,7 @@ export default class FilterBy
     displayItems()
     {
         document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
+        this.listenItemToBeSelected();
     }
 
     displayTag(e)
@@ -88,7 +88,7 @@ export default class FilterBy
                 <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
         `
         let div = document.createElement('div');
-        div.setAttribute('id', `${e}`);
+        div.setAttribute('data-id', `${e}`);
         div.classList.add('tag__wrapper', 'd-flex', 'flex-row', 'flex-nowrap', 'align-items-center', 'bg-primary', 'rounded', 'p-3');
         div.innerHTML = html;
         document.querySelector('.filter__tag').appendChild(div);
@@ -111,6 +111,14 @@ export default class FilterBy
     {
         document.querySelector('.filter__welcome').classList.add('d-none');
         document.querySelector('.filter__clicked').classList.remove('d-none');
+    }
+
+    filter(){
+        let list = [];
+        // list = this.gallery.recipeList.filter((recipe) =>
+        // {
+        //     recipe.
+        // });
     }
 
     filterItems(e)
@@ -155,41 +163,37 @@ export default class FilterBy
     {
         document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
         {
+            console.log(e);
             this.filterItems(e);
             this.displayItems();
             this.removeEscToExitFilterListener();
         });
     }
 
-    listenForSearchbar()
-    {
-        document.querySelector(`#searchzone`).addEventListener('input', (e) => 
-        {
-            this.filterItems(e);
-            this.displayItems();
-        });
-    }
-
-    listenItem()
+    listenItemToBeSelected()
     {
         document.querySelectorAll('.filter__item').forEach(el =>
         {
             el.addEventListener('click', (e) =>
             {
-                const needle = e.target.innerHTML;
-                this.displayTag(needle);
+                const needle = e.target.getAttribute('data-id');
                 this.removeItemFromList(needle);
-                this.listenTag(needle);
+                this.displayTag(needle);
+                this.listenForUnselect(needle);
+                this.selection.push(needle);
+                this.filter();
                 });
         });
     }
 
-    listenTag(e)
+    listenForUnselect(e)
     {
-        document.querySelector(`#${e} .tag__icon`).addEventListener('click', () =>
+        console.log(e);
+        document.querySelector(`div[data-id="${e}"] .tag__icon`).addEventListener('click', () =>
         {
-            this.addItemToList(e);
+            console.log("coucou");
             this.removeTag(e);
+            this.bringBackItemToList(e);
         });
     }
 
@@ -207,15 +211,13 @@ export default class FilterBy
 
     removeItemFromList(e)
     {
-        let index = this.filteredItems.indexOf(e);
-        this.filteredItems.splice(index, 1);
+        this.filteredItems.splice(this.filteredItems.indexOf(e), 1);
         this.displayItems();
-        this.listenItem();
     }
 
     removeTag(ingr)
     {
-        let div = document.querySelector(`#${ingr}`);
+        let div = document.querySelector(`div[data-id="${ingr}"]`);
         div.parentNode.removeChild(div);
     }
 
@@ -225,7 +227,5 @@ export default class FilterBy
         this.buildDropdown();
         this.displayItems();
         this.listenForDropdownToExpand();
-        this.listenForSearchbar();
-        this.listenItem();
     }
 }
