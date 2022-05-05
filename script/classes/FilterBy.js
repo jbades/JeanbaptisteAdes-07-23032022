@@ -78,7 +78,7 @@ export default class FilterBy
     displayItems()
     {
         document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
-        this.listenItemToBeSelected();
+        this.listenForSelect();
     }
 
     displayTag(e)
@@ -137,7 +137,7 @@ export default class FilterBy
                 // console.log(this.matchingRecipe, this.matchSelection(recipe), recipe.name);
             }
         });
-        console.log(this.filteredRecipe);
+        // console.log(this.filteredRecipe);
     }
 
     filterItems(e)
@@ -188,7 +188,7 @@ export default class FilterBy
         });
     }
 
-    listenItemToBeSelected()
+    listenForSelect()
     {
         document.querySelectorAll('.filter__item').forEach(el =>
         {
@@ -213,7 +213,9 @@ export default class FilterBy
         {
             this.removeTag(e);
             this.bringBackItemToList(e);
-            this.gallery.filtered = this.gallery.recipeList;
+            this.matchingRecipe.pop(e);
+            this.filterRecipe();
+            this.gallery.filtered = this.filteredRecipe;
             this.gallery.display();
         });
     }
