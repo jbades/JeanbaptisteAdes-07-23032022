@@ -3,6 +3,7 @@ export default class FilterBy
     constructor(gallery)
     {
         this.filteredItems = [];
+        this.filteredRecipe = [];
         this.gallery = gallery;
         this.item =
         {
@@ -11,7 +12,7 @@ export default class FilterBy
             placeholder: 'Rechercher un ingrédient'
         };
         this.itemList = new Set();
-        this.selection = [];
+        this.matchingRecipe = [];
     }
 
     bringBackItemToList(ingr)
@@ -102,6 +103,9 @@ export default class FilterBy
             {
                 this.contractDropdown();
                 this.resetList();
+                this.gallery.filtered = [];
+                this.gallery.filtered = this.filteredRecipe;
+                this.gallery.display();
             };
         };
         return callback;
@@ -113,12 +117,27 @@ export default class FilterBy
         document.querySelector('.filter__clicked').classList.remove('d-none');
     }
 
-    filter(){
-        let list = [];
-        // list = this.gallery.recipeList.filter((recipe) =>
-        // {
-        //     recipe.
-        // });
+    filterRecipe()
+    {
+        this.filteredRecipe = [];
+        this.gallery.recipeList.filter((recipe) =>
+        {
+            let countMatch = 0;
+            this.matchSelection(recipe).filter((matchObj) => 
+            {
+                if (matchObj == true)
+                {
+                    countMatch++;
+                };
+            });
+            
+            if (countMatch == this.matchingRecipe.length)
+            {
+                this.filteredRecipe.push(recipe);
+                // console.log(this.matchingRecipe, this.matchSelection(recipe), recipe.name);
+            }
+        });
+        console.log(this.filteredRecipe);
     }
 
     filterItems(e)
@@ -130,7 +149,7 @@ export default class FilterBy
             {
                 return (ingredient.toLowerCase()).includes(needle.toLowerCase());
             });
-        this.filteredItems = new Set(result);
+        this.filteredItems = result;
     }
 
     listenExitButton()
@@ -163,10 +182,9 @@ export default class FilterBy
     {
         document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
         {
-            console.log(e);
             this.filterItems(e);
             this.displayItems();
-            this.removeEscToExitFilterListener();
+            // this.removeEscToExitFilterListener();
         });
     }
 
@@ -180,21 +198,37 @@ export default class FilterBy
                 this.removeItemFromList(needle);
                 this.displayTag(needle);
                 this.listenForUnselect(needle);
-                this.selection.push(needle);
-                this.filter();
+                this.matchingRecipe.push(needle);
+                this.filterRecipe();
+                this.gallery.filtered = [];
+                this.gallery.filtered = this.filteredRecipe;
+                this.gallery.display();
                 });
         });
     }
 
     listenForUnselect(e)
     {
-        console.log(e);
         document.querySelector(`div[data-id="${e}"] .tag__icon`).addEventListener('click', () =>
         {
-            console.log("coucou");
             this.removeTag(e);
             this.bringBackItemToList(e);
+            this.gallery.filtered = this.gallery.recipeList;
+            this.gallery.display();
         });
+    }
+
+    matchSelection(recipe)
+    {
+        let ingrMatchList = [];
+        recipe.ingredientList.filter((ingredient) =>
+        {
+            let ingrMatchTest = this.matchingRecipe.some((selection) => ingredient.ingredient.includes(selection));
+            // let ingrMatchTest = ingredient.ingredient.includes((selection) => this.matchingRecipe == selection );
+            ingrMatchList.push(ingrMatchTest);
+            // console.log(this.matchingRecipe, ingredient.ingredient, ingrMatchTest, ingrMatchList);
+        });
+        return ingrMatchList;
     }
 
     removeEscToExitFilterListener()

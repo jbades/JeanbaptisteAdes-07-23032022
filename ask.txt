@@ -19,3 +19,6 @@
 
 03/05/22: 
 - removeEventListener : ne fonctionne pas
+
+10/05/22: 
+-
