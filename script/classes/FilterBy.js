@@ -37,6 +37,7 @@ export default class FilterBy
     {
         let html = 
         `
+            <div class="filter__blocker"></div>
             <div class="filter__clicked d-flex flex-column flex-nowrap bg-primary text-white rounded p-3">
                 <div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
                     <input
@@ -104,7 +105,6 @@ export default class FilterBy
             {
                 this.closeDropdown();
                 this.listenForDropdownOpening();
-                console.log(this.gallery);
                 this.gallery.filtered = this.filteredRecipe;
                 this.gallery.display();
             };
@@ -148,6 +148,8 @@ export default class FilterBy
 
     listenExitButton()
     {
+        // document.querySelector('.exit-filter').addEventListener('click', this.escapeFilter());
+        
         document.querySelector('.exit-filter').addEventListener('click', () => 
         {
             this.closeDropdown();
@@ -159,23 +161,19 @@ export default class FilterBy
 
     listenEscToExitFilter()
     {
-        document.addEventListener('keydown', (event) =>
-        {
-            if (event.key === "Escape")
-            {
-                this.closeDropdown();
-                this.listenForDropdownOpening();
-                this.gallery.filtered = this.filteredRecipe;
-                this.gallery.display();
-            };
-        });
+        document.addEventListener('keydown', this.escapeFilter());
     }
 
     listenForClickOutsideDropdown()
     {
-        document.querySelector(`body *:not(.filter__clicked)`).addEventListener('click', () =>
+        // document.querySelector(`.filter__blocker`).addEventListener('click', this.escapeFilter());
+
+        document.querySelector('.filter__blocker').addEventListener('click', () => 
         {
-            console.log("coucou");
+            this.closeDropdown();
+            this.filteredItems = this.itemList;
+            this.listenForDropdownOpening();
+            this.listenForSelect();
         });
     }
 
