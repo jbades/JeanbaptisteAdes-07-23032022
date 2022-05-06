@@ -11,12 +11,18 @@ export default class RecipesGallery
 
     display()
     {
-        let recipesHTML = '';
-        this.filtered.forEach((recipe) =>
+        let html = ``;
+        if (this.filtered.length != 0)
         {
-            recipesHTML += recipe.display();
-        });
-        document.querySelector('.gallery').innerHTML = recipesHTML;
+            this.filtered.forEach((recipe) =>
+            {
+                html += recipe.display();
+            });
+        } else 
+        {
+            html = `<span>Aucune recette ne correspond à votre critère... Vous pouvez chercher « tarte aux pommes », « poisson », etc.</span>`
+        }
+        document.querySelector('.gallery').innerHTML = html;
     }
 
     hydrate(data)
@@ -67,14 +73,25 @@ export default class RecipesGallery
         document.querySelector('#searchzone').addEventListener('input', (el) =>
         {
             this.filtered = [];
-            this.recipeList.forEach((recipe) =>
+            if (el.target.value.length < 3)
             {
-                if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
+                let html = 
+                `
+                    <span>Entrez plus de 3 caractères pour obtenir le résultat de votre recherche.</span>
+                `
+                document.querySelector('.gallery').innerHTML = html;
+
+            } else
+            {
+                this.recipeList.forEach((recipe) =>
                 {
-                    this.filtered.push(recipe);
-                };
-            });
-            this.display();
+                    if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
+                    {
+                        this.filtered.push(recipe);
+                    }
+                });
+                this.display();
+            }
         });
     }
 
