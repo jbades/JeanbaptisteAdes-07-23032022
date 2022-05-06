@@ -2,9 +2,9 @@ export default class FilterBy
 {
     constructor(gallery)
     {
-        this.filteredItems = [];
-        this.filteredRecipe = [];
         this.gallery = gallery;
+        this.filteredItems = [];
+        this.filteredRecipe = this.gallery.recipeList;
         this.item =
         {
             name: 'ingredient',
@@ -19,10 +19,9 @@ export default class FilterBy
     {
         this.filteredItems.push(ingr);
         this.filteredItems =  this.filteredItems.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-        this.displayItems();
     }
 
-    buildDropdown()
+    closeDropdown()
     {
         let html = 
         `
@@ -30,7 +29,15 @@ export default class FilterBy
                 <span class="h5">${this.item.heading}</span>
                 <i class="fa fa-chevron-down" aria-hidden="true"></i> 
             </button>
-            <div class="filter__clicked d-flex flex-column flex-nowrap d-none bg-primary text-white rounded p-3">
+        `;
+        document.querySelector('.filter__bar').innerHTML = html;
+    }
+
+    openDropdown()
+    {
+        let html = 
+        `
+            <div class="filter__clicked d-flex flex-column flex-nowrap bg-primary text-white rounded p-3">
                 <div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
                     <input
                         id="search-${this.item.name}"
@@ -69,12 +76,6 @@ export default class FilterBy
         this.filteredItems = this.itemList;
     }
 
-    contractDropdown ()
-    {
-        document.querySelector('.filter__welcome').classList.remove('d-none');
-        document.querySelector('.filter__clicked').classList.add('d-none');
-    }
-
     displayItems()
     {
         document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
@@ -101,20 +102,14 @@ export default class FilterBy
         {
             if (event.key === "Escape")
             {
-                this.contractDropdown();
-                this.resetList();
-                this.gallery.filtered = [];
+                this.closeDropdown();
+                this.listenForDropdownOpening();
+                console.log(this.gallery);
                 this.gallery.filtered = this.filteredRecipe;
                 this.gallery.display();
             };
         };
         return callback;
-    }
-
-    expandDropdown ()
-    {
-        document.querySelector('.filter__welcome').classList.add('d-none');
-        document.querySelector('.filter__clicked').classList.remove('d-none');
     }
 
     filterRecipe()
@@ -137,7 +132,6 @@ export default class FilterBy
                 // console.log(this.matchingRecipe, this.matchSelection(recipe), recipe.name);
             }
         });
-        // console.log(this.filteredRecipe);
     }
 
     filterItems(e)
@@ -156,25 +150,47 @@ export default class FilterBy
     {
         document.querySelector('.exit-filter').addEventListener('click', () => 
         {
-            this.contractDropdown();
-            this.resetList();
+            this.closeDropdown();
+            this.filteredItems = this.itemList;
+            this.listenForDropdownOpening();
+            this.listenForSelect();
         });
     }
 
     listenEscToExitFilter()
     {
-        document.addEventListener('keydown', this.escapeFilter());
+        document.addEventListener('keydown', (event) =>
+        {
+            if (event.key === "Escape")
+            {
+                this.closeDropdown();
+                this.listenForDropdownOpening();
+                this.gallery.filtered = this.filteredRecipe;
+                this.gallery.display();
+            };
+        });
     }
 
-    listenForDropdownToExpand()
+    listenForClickOutsideDropdown()
+    {
+        document.querySelector(`body *:not(.filter__clicked)`).addEventListener('click', () =>
+        {
+            console.log("coucou");
+        });
+    }
+
+    listenForDropdownOpening()
     {
         document.querySelector('.filter__welcome').addEventListener('click', () => 
         {
-            this.expandDropdown();
+            this.openDropdown();
+            this.filteredItems = this.itemList;
+            this.displayItems();
             document.querySelector(`#search-${this.item.name}`).focus();
-            this.listenExitButton()
+            this.listenExitButton();
             this.listenEscToExitFilter();
             this.listenForFilterSearch();
+            this.listenForClickOutsideDropdown();
         });
     }
 
@@ -207,13 +223,13 @@ export default class FilterBy
         });
     }
 
-    listenForUnselect(e)
+    listenForUnselect(el)
     {
-        document.querySelector(`div[data-id="${e}"] .tag__icon`).addEventListener('click', () =>
+        document.querySelector(`div[data-id="${el}"] .tag__icon`).addEventListener('click', () =>
         {
-            this.removeTag(e);
-            this.bringBackItemToList(e);
-            this.matchingRecipe.pop(e);
+            this.removeTag(el);
+            this.bringBackItemToList(el);
+            this.removeIngredientFromMatchList(el);
             this.filterRecipe();
             this.gallery.filtered = this.filteredRecipe;
             this.gallery.display();
@@ -238,17 +254,15 @@ export default class FilterBy
        document.removeEventListener('keydown', this.listenEscToExitFilter());
     }
 
-    resetList()
-    {
-        document.querySelector(`#search-${this.item.name}`).value = '';
-        this.filteredItems = this.itemList;
-        this.displayItems();
-    }
-
     removeItemFromList(e)
     {
         this.filteredItems.splice(this.filteredItems.indexOf(e), 1);
         this.displayItems();
+    }
+
+    removeIngredientFromMatchList(e)
+    {
+        this.matchingRecipe.splice(this.matchingRecipe.indexOf(e), 1);
     }
 
     removeTag(ingr)
@@ -260,8 +274,7 @@ export default class FilterBy
     start()
     {
         this.collect();
-        this.buildDropdown();
-        this.displayItems();
-        this.listenForDropdownToExpand();
+        this.closeDropdown();
+        this.listenForDropdownOpening();
     }
 }
