@@ -62,8 +62,7 @@ export default class Recipe
         const needle = e.target.value;
         const haystack = this.description.toLowerCase();
 
-        let included = haystack.includes(needle.toLowerCase());
-        return included;
+        return haystack.includes(needle.toLowerCase());
     }
 
     searchIngredients(e)
@@ -81,7 +80,6 @@ export default class Recipe
         const needle = e.target.value;
         const haystack = this.name.toLowerCase();
 
-        let included = haystack.includes(needle.toLowerCase());
-        return included;
+        return haystack.includes(needle.toLowerCase());
     }
 }

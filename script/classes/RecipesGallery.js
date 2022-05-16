@@ -5,7 +5,7 @@ export default class RecipesGallery
 {
     constructor()
     {
-        this.recipeList = [];
+        this.all = [];
         this.filtered = [];
    }
 
@@ -29,9 +29,9 @@ export default class RecipesGallery
     {
         data.forEach((recipe) => 
         {
-           this.recipeList.push(new Recipe(recipe));
+           this.all.push(new Recipe(recipe));
         });
-        this.filtered = this.recipeList;
+        this.filtered = this.all;
     }
 
     listenEsc()
@@ -39,7 +39,7 @@ export default class RecipesGallery
         document.addEventListener('keydown', (e) => {
             if (e.key === "Escape") {
                 document.querySelector('#searchzone').value = '';
-                this.filtered = this.recipeList;
+                this.filtered = this.all;
                 this.display();
                 };
         });
@@ -56,7 +56,7 @@ export default class RecipesGallery
             {
                 // const needle = e.target.innerHTML;
                 this.filtered = [];
-                this.recipeList.forEach((recipe) =>
+                this.all.forEach((recipe) =>
                 {
                     if (recipe.searchIngredients(e))
                     {
@@ -83,7 +83,7 @@ export default class RecipesGallery
 
             } else
             {
-                this.recipeList.forEach((recipe) =>
+                this.all.forEach((recipe) =>
                 {
                     if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
                     {

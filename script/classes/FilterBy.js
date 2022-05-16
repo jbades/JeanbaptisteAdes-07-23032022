@@ -3,22 +3,33 @@ export default class FilterBy
     constructor(gallery)
     {
         this.gallery = gallery;
-        this.filteredItems = [];
-        this.filteredRecipe = this.gallery.recipeList;
+        this.all = new Set();
+        this.filtered = [];
+        this.selection = [];
+        // this.filteredRecipe = this.gallery.recipeList;
         this.item =
         {
             name: 'ingredient',
             heading: 'Ingrédients',
             placeholder: 'Rechercher un ingrédient'
         };
-        this.itemList = new Set();
-        this.matchingRecipe = [];
+        // this.searchedIngredient = [];
     }
 
     bringBackItemToList(ingr)
     {
-        this.filteredItems.push(ingr);
-        this.filteredItems =  this.filteredItems.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        this.filtered.push(ingr);
+        this.filtered =  this.filtered.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    }
+
+    buildDropdownList()
+    {
+        let html = '';
+        this.filtered.forEach(item => 
+        {
+            html += `<button class="filter__item border-0 bg-transparent" data-id="${item}">${item}</button>`;
+        });
+        return html;
     }
 
     closeDropdown()
@@ -31,6 +42,192 @@ export default class FilterBy
             </button>
         `;
         document.querySelector('.filter__bar').innerHTML = html;
+    }
+
+    collect()
+    {
+        this.all = new Set();
+
+        this.gallery.filtered.forEach(recipe => 
+        {
+            recipe.ingredientList.forEach(ingredient => 
+                {
+                    this.all.add(ingredient.ingredient.toLowerCase());
+                });
+        });
+        this.all = [...(this.all)].sort((a, b) => a.localeCompare(b));
+   }
+
+    displayItems()
+    {
+        document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
+        // this.listenForSelect();
+    }
+
+    escapeFilter()
+    {
+        const callback = (event) =>
+        {
+            if (event.key === "Escape")
+            {
+                this.closeDropdown();
+                this.listenForDropdownOpening();
+                this.gallery.filtered = this.filteredRecipe;
+                this.gallery.display();
+            };
+        };
+        return callback;
+    }
+
+    filterItems(e)
+    {
+        const needle = e.target.value;
+        const haystack = [...(this.all)];
+
+        let result = haystack.filter(ingredient => 
+            {
+                return (ingredient.toLowerCase()).includes(needle.toLowerCase());
+            });
+        this.filtered = result;
+    }
+
+    filterRecipe(recipes)
+    {
+        return recipes.filter((recipe) =>
+        {
+            let countMatch = 0;
+            this.matchSelection(recipe).filter((matchObj) => 
+            {
+                if (matchObj == true)
+                {
+                    countMatch++;
+                };
+            });
+            
+            return (countMatch == this.selection.length)
+        });
+
+    }
+
+    listenEscToExitFilter()
+    {
+        document.addEventListener('keydown', this.escapeFilter());
+    }
+
+    listenExitButton()
+    {
+        // document.querySelector('.exit-filter').addEventListener('click', this.escapeFilter());
+        
+        document.querySelector('.exit-filter').addEventListener('click', () => 
+        {
+            this.closeDropdown();
+            this.filtered = this.all;
+            this.listenForDropdownOpening();
+            this.listenForSelect();
+        });
+    }
+
+    listenForClickOutsideDropdown()
+    {
+        // document.querySelector(`.filter__blocker`).addEventListener('click', this.escapeFilter());
+
+        document.querySelector('.filter__blocker').addEventListener('click', () => 
+        {
+            this.closeDropdown();
+            this.filtered = this.all;
+            this.listenForDropdownOpening();
+            this.listenForSelect();
+        });
+    }
+
+    listenForDropdownOpening()
+    {
+        document.querySelector('.filter__welcome').addEventListener('click', () => 
+        {
+            this.openDropdown();
+            this.filtered = this.all;
+            this.displayItems();
+            document.querySelector(`#search-${this.item.name}`).focus();
+            this.listenExitButton();
+            this.listenEscToExitFilter();
+            this.listenForFilterSearch();
+            this.listenForClickOutsideDropdown();
+            this.listenForSelect();
+        });
+    }
+
+    listenForFilterSearch()
+    {
+        document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
+        {
+            this.filterItems(e);
+            this.displayItems();
+            // this.removeEscToExitFilterListener();
+        });
+    }
+
+    listenForSearchedIngredient()
+    {
+        document.querySelector('#searchzone').addEventListener('input', (el) =>
+        {
+            this.gallery.filtered.forEach((recipe) =>
+            {
+                recipe.ingredient.forEach((ingredient) =>
+                {
+                    this.searchedIngredient.push(ingredient.ingredient);
+                });
+            });
+        });
+    }
+    
+    listenForSelect()
+    {
+        document.querySelectorAll('.filter__item').forEach(el =>
+        {
+            el.addEventListener('click', (e) =>
+            {
+                const needle = e.target.getAttribute('data-id');
+                this.select(needle);
+                this.showSelection();
+                this.listenForUnselect();
+                this.gallery.filtered = this.filterRecipe(this.gallery.filtered);
+                this.gallery.display();
+                this.collect();
+                this.closeDropdown();
+                this.listenForDropdownOpening();
+            });
+        });
+    }
+
+    listenForUnselect()
+    {
+        this.selection.forEach(item =>
+            {
+                document.querySelector(`div[data-id="${item}"] .tag__icon`).addEventListener('click', () =>
+                {
+                    this.removeIngredientFromSelection(item);
+                    this.showSelection();
+                    this.gallery.filtered = this.filterRecipe(this.gallery.all);
+                    this.gallery.display();
+                    this.collect();
+                    this.closeDropdown();
+                    this.listenForDropdownOpening();
+                    this.listenForUnselect();
+                });
+            });
+    }
+
+    matchSelection(recipe)
+    {
+        let ingrMatchList = [];
+        recipe.ingredientList.filter((ingredient) =>
+        {
+            let ingrMatchTest = this.selection.some((selection) => ingredient.ingredient.includes(selection));
+            // let ingrMatchTest = ingredient.ingredient.includes((selection) => this.selection == selection );
+            ingrMatchList.push(ingrMatchTest);
+            // console.log(this.selection, ingredient.ingredient, ingrMatchTest, ingrMatchList);
+        });
+        return ingrMatchList;
     }
 
     openDropdown()
@@ -54,199 +251,6 @@ export default class FilterBy
         document.querySelector('.filter__bar').innerHTML = html;
     }
 
-    buildDropdownList()
-    {
-        let html = '';
-        this.filteredItems.forEach(item => 
-        {
-            html += `<button class="filter__item border-0 bg-transparent" data-id="${item}">${item}</button>`;
-        });
-        return html;
-    }
-
-    collect()
-    {
-        this.gallery.recipeList.forEach(recipe => 
-        {
-            recipe.ingredientList.forEach(ingredient => 
-                {
-                    this.itemList.add(ingredient.ingredient);
-                });
-        });
-        this.itemList = [...(this.itemList)].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-        this.filteredItems = this.itemList;
-    }
-
-    displayItems()
-    {
-        document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
-        this.listenForSelect();
-    }
-
-    displayTag(e)
-    {
-        let html =
-        `
-                <div class="tag__text text-white bg-transparent border-0">${e}</div>
-                <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
-        `
-        let div = document.createElement('div');
-        div.setAttribute('data-id', `${e}`);
-        div.classList.add('tag__wrapper', 'd-flex', 'flex-row', 'flex-nowrap', 'align-items-center', 'bg-primary', 'rounded', 'p-3');
-        div.innerHTML = html;
-        document.querySelector('.filter__tag').appendChild(div);
-    }
-
-   escapeFilter()
-    {
-        const callback = (event) =>
-        {
-            if (event.key === "Escape")
-            {
-                this.closeDropdown();
-                this.listenForDropdownOpening();
-                this.gallery.filtered = this.filteredRecipe;
-                this.gallery.display();
-            };
-        };
-        return callback;
-    }
-
-    filterRecipe()
-    {
-        this.filteredRecipe = [];
-        this.gallery.recipeList.filter((recipe) =>
-        {
-            let countMatch = 0;
-            this.matchSelection(recipe).filter((matchObj) => 
-            {
-                if (matchObj == true)
-                {
-                    countMatch++;
-                };
-            });
-            
-            if (countMatch == this.matchingRecipe.length)
-            {
-                this.filteredRecipe.push(recipe);
-                // console.log(this.matchingRecipe, this.matchSelection(recipe), recipe.name);
-            }
-        });
-    }
-
-    filterItems(e)
-    {
-        const needle = e.target.value;
-        const haystack = [...(this.itemList)];
-
-        let result = haystack.filter(ingredient => 
-            {
-                return (ingredient.toLowerCase()).includes(needle.toLowerCase());
-            });
-        this.filteredItems = result;
-    }
-
-    listenExitButton()
-    {
-        // document.querySelector('.exit-filter').addEventListener('click', this.escapeFilter());
-        
-        document.querySelector('.exit-filter').addEventListener('click', () => 
-        {
-            this.closeDropdown();
-            this.filteredItems = this.itemList;
-            this.listenForDropdownOpening();
-            this.listenForSelect();
-        });
-    }
-
-    listenEscToExitFilter()
-    {
-        document.addEventListener('keydown', this.escapeFilter());
-    }
-
-    listenForClickOutsideDropdown()
-    {
-        // document.querySelector(`.filter__blocker`).addEventListener('click', this.escapeFilter());
-
-        document.querySelector('.filter__blocker').addEventListener('click', () => 
-        {
-            this.closeDropdown();
-            this.filteredItems = this.itemList;
-            this.listenForDropdownOpening();
-            this.listenForSelect();
-        });
-    }
-
-    listenForDropdownOpening()
-    {
-        document.querySelector('.filter__welcome').addEventListener('click', () => 
-        {
-            this.openDropdown();
-            this.filteredItems = this.itemList;
-            this.displayItems();
-            document.querySelector(`#search-${this.item.name}`).focus();
-            this.listenExitButton();
-            this.listenEscToExitFilter();
-            this.listenForFilterSearch();
-            this.listenForClickOutsideDropdown();
-        });
-    }
-
-    listenForFilterSearch()
-    {
-        document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
-        {
-            this.filterItems(e);
-            this.displayItems();
-            // this.removeEscToExitFilterListener();
-        });
-    }
-
-    listenForSelect()
-    {
-        document.querySelectorAll('.filter__item').forEach(el =>
-        {
-            el.addEventListener('click', (e) =>
-            {
-                const needle = e.target.getAttribute('data-id');
-                this.removeItemFromList(needle);
-                this.displayTag(needle);
-                this.listenForUnselect(needle);
-                this.matchingRecipe.push(needle);
-                this.filterRecipe();
-                this.gallery.filtered = [];
-                this.gallery.filtered = this.filteredRecipe;
-                this.gallery.display();
-                });
-        });
-    }
-
-    listenForUnselect(el)
-    {
-        document.querySelector(`div[data-id="${el}"] .tag__icon`).addEventListener('click', () =>
-        {
-            this.removeTag(el);
-            this.bringBackItemToList(el);
-            this.removeIngredientFromMatchList(el);
-            this.filterRecipe();
-            this.gallery.filtered = this.filteredRecipe;
-            this.gallery.display();
-        });
-    }
-
-    matchSelection(recipe)
-    {
-        let ingrMatchList = [];
-        recipe.ingredientList.filter((ingredient) =>
-        {
-            let ingrMatchTest = this.matchingRecipe.some((selection) => ingredient.ingredient.includes(selection));
-            // let ingrMatchTest = ingredient.ingredient.includes((selection) => this.matchingRecipe == selection );
-            ingrMatchList.push(ingrMatchTest);
-            // console.log(this.matchingRecipe, ingredient.ingredient, ingrMatchTest, ingrMatchList);
-        });
-        return ingrMatchList;
-    }
-
     removeEscToExitFilterListener()
     {
        document.removeEventListener('keydown', this.listenEscToExitFilter());
@@ -254,19 +258,43 @@ export default class FilterBy
 
     removeItemFromList(e)
     {
-        this.filteredItems.splice(this.filteredItems.indexOf(e), 1);
+        this.filtered.splice(this.filtered.indexOf(e), 1);
         this.displayItems();
     }
 
-    removeIngredientFromMatchList(e)
+    removeIngredientFromSelection(e)
     {
-        this.matchingRecipe.splice(this.matchingRecipe.indexOf(e), 1);
+        this.selection.splice(this.selection.indexOf(e), 1);
     }
 
     removeTag(ingr)
     {
         let div = document.querySelector(`div[data-id="${ingr}"]`);
         div.parentNode.removeChild(div);
+    }
+
+    select(el)
+    {
+        if (!this.selection.includes(el))
+        {
+            this.selection.push(el);
+        }
+    }
+
+    showSelection()
+    {
+        let html = '';
+        this.selection.forEach(item =>
+            {
+                html +=
+                `
+                    <div class="tag__wrapper d-flex flex-row flex-nowrap align-items-center bg-primary rounded p-3" data-id=${item}>
+                        <div class="tag__text text-white bg-transparent border-0">${item}</div>
+                        <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
+                    </div>
+                `
+            });
+        document.querySelector('.filter__tag').innerHTML = html;
     }
 
     start()

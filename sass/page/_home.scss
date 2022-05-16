@@ -21,12 +21,12 @@
         background-color: #E7E7E7;
     }
     &__description {
-        display: -webkit-box !important;
-        -webkit-line-clamp: 8;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        white-space: normal;
-        text-overflow: ellipsis;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 8;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            white-space: normal;
+            text-overflow: ellipsis;
         }
     &__img {
         width: 100%;
