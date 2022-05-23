@@ -4,8 +4,8 @@ export default class RecipesGallery
 {
     constructor()
     {
-        this.all = [];
-        this.filtered = [];
+        this.all = new Set();
+        this.filtered = new Set();
    }
 
     display()
@@ -28,7 +28,7 @@ export default class RecipesGallery
     {
         data.forEach((recipe) => 
         {
-           this.all.push(new Recipe(recipe));
+           this.all.add(new Recipe(recipe));
         });
         this.filtered = this.all;
     }
@@ -45,11 +45,10 @@ export default class RecipesGallery
         });
     }
 
-    search()
+    listenForSearch()
     {
         document.querySelector('#searchzone').addEventListener('input', (el) =>
         {
-            this.filtered = [];
             if (el.target.value.length < 3)
             {
                 let html = 
@@ -60,24 +59,30 @@ export default class RecipesGallery
 
             } else
             {
-                this.all.forEach((recipe) =>
-                {
-                    if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
-                    {
-                        this.filtered.push(recipe);
-                    }
-                });
+                this.search(el);
                 this.display();
+                this.listenEsc();
             }
         });
+    }
+
+    search(el)
+    {
+        this.filtered = new Set();
+        this.all.forEach((recipe) =>
+        {
+            if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
+            {
+                this.filtered.add(recipe);
+            }
+       });
     }
 
     start(data)
     {
         this.hydrate(data);
         this.display();
-        this.search();
-        this.listenEsc();
+        this.listenForSearch();
     }
 
 }

@@ -32,7 +32,7 @@ export default class FilterBy
         return html;
     }
 
-    closeDropdown()
+    showClosedDropdown()
     {
         let html = 
         `
@@ -46,7 +46,6 @@ export default class FilterBy
 
     collect()
     {
-        this.gallery.search();
         this.all = new Set();
 
         this.gallery.filtered.forEach(recipe => 
@@ -69,7 +68,7 @@ export default class FilterBy
     {
         if (event.key === "Escape")
         {
-            this.closeDropdown();
+            this.showClosedDropdown();
             this.listenForDropdownOpening();
             document.removeEventListener('keydown', this.escapeFilter.bind(this));
         };
@@ -89,7 +88,7 @@ export default class FilterBy
 
     filterRecipe(recipes)
     {
-        return recipes.filter((recipe) =>
+        return [...(recipes)].filter((recipe) =>
         {
             let countMatch = 0;
             this.matchSelection(recipe).filter((matchObj) => 
@@ -102,7 +101,6 @@ export default class FilterBy
             
             return (countMatch == this.selection.length)
         });
-
     }
 
     listenEscToExitFilter()
@@ -116,7 +114,7 @@ export default class FilterBy
         
         document.querySelector('.exit-filter').addEventListener('click', () => 
         {
-            this.closeDropdown();
+            this.showClosedDropdown();
             this.filtered = this.all;
             this.listenForDropdownOpening();
             this.listenForSelect();
@@ -129,7 +127,7 @@ export default class FilterBy
 
         document.querySelector('.filter__blocker').addEventListener('click', () => 
         {
-            this.closeDropdown();
+            this.showClosedDropdown();
             this.filtered = this.all;
             this.listenForDropdownOpening();
             this.listenForSelect();
@@ -190,7 +188,7 @@ export default class FilterBy
                 this.gallery.filtered = this.filterRecipe(this.gallery.filtered);
                 this.gallery.display();
                 this.collect();
-                this.closeDropdown();
+                this.showClosedDropdown();
                 this.listenForDropdownOpening();
             });
         });
@@ -207,7 +205,7 @@ export default class FilterBy
                     this.gallery.filtered = this.filterRecipe(this.gallery.all);
                     this.gallery.display();
                     this.collect();
-                    this.closeDropdown();
+                    this.showClosedDropdown();
                     this.listenForDropdownOpening();
                     this.listenForUnselect();
                 });
@@ -296,8 +294,9 @@ export default class FilterBy
 
     start()
     {
+        this.gallery.listenForSearch();
         this.collect();
-        this.closeDropdown();
+        this.showClosedDropdown();
         this.listenForDropdownOpening();
         this.listenEscToExitFilter();
     }
