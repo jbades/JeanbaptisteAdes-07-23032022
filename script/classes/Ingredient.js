@@ -1,5 +1,3 @@
-import Recipe from "./Recipe.js";
-
 export default class Ingredient
 {
     constructor(ingredient)

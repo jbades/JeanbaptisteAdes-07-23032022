@@ -1,4 +1,4 @@
-export default class FilterBy
+export default class FilterByAppliance
 {
     constructor(gallery)
     {
@@ -9,9 +9,9 @@ export default class FilterBy
         // this.filteredRecipe = this.gallery.recipeList;
         this.item =
         {
-            name: 'ingredient',
-            heading: 'Ingrédients',
-            placeholder: 'Rechercher un ingrédient'
+            name: 'appliance',
+            heading: 'Appareil',
+            placeholder: 'Rechercher un appareil'
         };
         // this.searchedIngredient = [];
     }
@@ -188,15 +188,16 @@ export default class FilterBy
 
     matchSelection(recipe)
     {
-        let ingrMatchList = [];
-        recipe.ingredientList.filter((ingredient) =>
+        let applMatchList = [];
+        console.log(recipe);
+        recipe.ingredientList.filter((appliance) =>
         {
-            let ingrMatchTest = this.selection.some((selection) => ingredient.ingredient.includes(selection));
+            let applMatchTest = this.selection.some((selection) => appliance.ingredient.includes(selection));
             // let ingrMatchTest = ingredient.ingredient.includes((selection) => this.selection == selection );
-            ingrMatchList.push(ingrMatchTest);
-            // console.log(this.selection, ingredient.ingredient, ingrMatchTest, ingrMatchList);
+            applMatchList.push(applMatchTest);
+            // console.log(this.selection, ingredient.ingredient, ingrMatchTest, applMatchList);
         });
-        return ingrMatchList;
+        return applMatchList;
     }
 
     openDropdown()
@@ -278,66 +279,20 @@ export default class FilterBy
         document.querySelector('.filter__tag').innerHTML = html;
     }
 
-    sort(category)
+    sort()
     {
-        // this.all = new Set();
-        // this.gallery.filtered.forEach(recipe => 
-        //     {
-        //         recipe.ingredientList.forEach(ingredient => 
-        //             {
-        //                 this.all.add(ingredient.ingredient.toLowerCase());
-        //             });
-        //     });
-        this.collect(category);
-        this.all = [...(this.all)].sort((a, b) => a.localeCompare(b));
-   }
+        this.all = new Set();
 
-   collect(el)
-   {
-        console.log(el);
-        switch (el)
-       {
-           case 'ingredient':
-                console.log('cas ingredient');
-                this.all = new Set();
+        this.gallery.filtered.forEach(recipe => 
+        {
+            this.all.add(recipe.appliance.toLowerCase());
+        });
+    }
 
-               this.gallery.filtered.forEach(recipe => 
-               {
-                   recipe.ingredientList.forEach(item => 
-                       {
-                           this.all.add(item.ingredient.toLowerCase());
-                       });
-               });
-               break;
-           case 'appliance':
-                console.log('cas appliance');
-                this.all = new Set();
-
-               this.gallery.filtered.forEach(recipe => 
-               {
-                   this.all.add(recipe.appliance.toLowerCase());
-               });
-               break;
-           case 'ustensil':
-                console.log('cas ustensil');
-                this.all = new Set();
-
-               this.gallery.filtered.forEach(recipe => 
-                   {
-                       recipe.ustensils.forEach(ingredient => 
-                           {
-                               this.all.add(ingredient.toLowerCase());
-                           });
-                   });
-           default:
-                console.log("erreur");
-       }
-   }
-   
-   start(category)
+   start()
     {
         // this.gallery.listenForSearch();
-        this.sort(category);
+        this.sort();
         this.showClosedDropdown();
         this.listenForDropdownOpening();
         this.listenEscToExitFilter();
