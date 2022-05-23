@@ -46,6 +46,7 @@ export default class FilterBy
 
     collect()
     {
+        this.gallery.search();
         this.all = new Set();
 
         this.gallery.filtered.forEach(recipe => 
@@ -64,19 +65,14 @@ export default class FilterBy
         // this.listenForSelect();
     }
 
-    escapeFilter()
+    escapeFilter(event)
     {
-        const callback = (event) =>
+        if (event.key === "Escape")
         {
-            if (event.key === "Escape")
-            {
-                this.closeDropdown();
-                this.listenForDropdownOpening();
-                this.gallery.filtered = this.filteredRecipe;
-                this.gallery.display();
-            };
+            this.closeDropdown();
+            this.listenForDropdownOpening();
+            document.removeEventListener('keydown', this.escapeFilter.bind(this));
         };
-        return callback;
     }
 
     filterItems(e)
@@ -84,9 +80,9 @@ export default class FilterBy
         const needle = e.target.value;
         const haystack = [...(this.all)];
 
-        let result = haystack.filter(ingredient => 
+        let result = haystack.filter(item => 
             {
-                return (ingredient.toLowerCase()).includes(needle.toLowerCase());
+                return (item.toLowerCase()).includes(needle.toLowerCase());
             });
         this.filtered = result;
     }
@@ -111,7 +107,7 @@ export default class FilterBy
 
     listenEscToExitFilter()
     {
-        document.addEventListener('keydown', this.escapeFilter());
+        document.addEventListener('keydown', this.escapeFilter.bind(this));
     }
 
     listenExitButton()
@@ -162,23 +158,24 @@ export default class FilterBy
         {
             this.filterItems(e);
             this.displayItems();
+            this.listenForSelect();
             // this.removeEscToExitFilterListener();
         });
     }
 
-    listenForSearchedIngredient()
-    {
-        document.querySelector('#searchzone').addEventListener('input', (el) =>
-        {
-            this.gallery.filtered.forEach((recipe) =>
-            {
-                recipe.ingredient.forEach((ingredient) =>
-                {
-                    this.searchedIngredient.push(ingredient.ingredient);
-                });
-            });
-        });
-    }
+    // listenForSearchedIngredient()
+    // {
+    //     document.querySelector('#searchzone').addEventListener('input', (el) =>
+    //     {
+    //         this.gallery.filtered.forEach((recipe) =>
+    //         {
+    //             recipe.ingredient.forEach((ingredient) =>
+    //             {
+    //                 this.searchedIngredient.push(ingredient.ingredient);
+    //             });
+    //         });
+    //     });
+    // }
     
     listenForSelect()
     {
@@ -205,7 +202,7 @@ export default class FilterBy
             {
                 document.querySelector(`div[data-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
-                    this.removeIngredientFromSelection(item);
+                    this.removeItemFromSelection(item);
                     this.showSelection();
                     this.gallery.filtered = this.filterRecipe(this.gallery.all);
                     this.gallery.display();
@@ -251,10 +248,10 @@ export default class FilterBy
         document.querySelector('.filter__bar').innerHTML = html;
     }
 
-    removeEscToExitFilterListener()
-    {
-       document.removeEventListener('keydown', this.listenEscToExitFilter());
-    }
+    // removeEscToExitFilterListener()
+    // {
+    //    document.removeEventListener('keydown', this.listenEscToExitFilter());
+    // }
 
     removeItemFromList(e)
     {
@@ -262,7 +259,7 @@ export default class FilterBy
         this.displayItems();
     }
 
-    removeIngredientFromSelection(e)
+    removeItemFromSelection(e)
     {
         this.selection.splice(this.selection.indexOf(e), 1);
     }
@@ -288,7 +285,7 @@ export default class FilterBy
             {
                 html +=
                 `
-                    <div class="tag__wrapper d-flex flex-row flex-nowrap align-items-center bg-primary rounded p-3" data-id=${item}>
+                    <div class="tag__wrapper d-flex flex-row flex-nowrap align-items-center bg-primary rounded p-3" data-id='${item}'>
                         <div class="tag__text text-white bg-transparent border-0">${item}</div>
                         <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
                     </div>
@@ -302,5 +299,6 @@ export default class FilterBy
         this.collect();
         this.closeDropdown();
         this.listenForDropdownOpening();
+        this.listenEscToExitFilter();
     }
 }

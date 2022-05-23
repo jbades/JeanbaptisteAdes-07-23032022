@@ -20,5 +20,8 @@
 03/05/22: 
 - removeEventListener : ne fonctionne pas
 
-10/05/22: 
--
+16/05/22: 
+- erreur sur 'esc' dans RecipeGallery.js
+
+24/05/22: 
+- method.bind(this): équivalent à passer un argument ?

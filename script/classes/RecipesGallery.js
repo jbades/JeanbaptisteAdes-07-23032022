@@ -1,5 +1,4 @@
 import Recipe from "./Recipe.js";
-import FilterBy from "./FilterBy.js";
 
 export default class RecipesGallery
 {
@@ -37,34 +36,12 @@ export default class RecipesGallery
     listenEsc()
     {
         document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape") {
+            if (e.key === "Escape")
+            {
                 document.querySelector('#searchzone').value = '';
                 this.filtered = this.all;
                 this.display();
-                };
-        });
-    }
-
-    async listenFilterItem()
-    {
-        let toto = new FilterBy();
-        await toto.displayItems();
-        
-        document.querySelectorAll('.filter__item').forEach(el =>
-        {
-            el.addEventListener('click', (e) =>
-            {
-                // const needle = e.target.innerHTML;
-                this.filtered = [];
-                this.all.forEach((recipe) =>
-                {
-                    if (recipe.searchIngredients(e))
-                    {
-                        this.filtered.push(recipe);
-                    };
-                });
-                this.display();
-            });
+            };
         });
     }
 
@@ -100,7 +77,6 @@ export default class RecipesGallery
         this.hydrate(data);
         this.display();
         this.search();
-        // this.listenFilterItem();
         this.listenEsc();
     }
 
