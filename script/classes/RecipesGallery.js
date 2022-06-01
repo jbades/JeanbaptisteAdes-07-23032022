@@ -1,4 +1,5 @@
 import Recipe from "./Recipe.js";
+import FilterBy from "./FilterBy.js";
 
 export default class RecipesGallery
 {
@@ -6,6 +7,13 @@ export default class RecipesGallery
     {
         this.all = new Set();
         this.filtered = new Set();
+        this.filters = [];
+   }
+
+   addFilter(filter)
+   {
+       this.filters.push(filter);
+       filter.start();
    }
 
     display()
@@ -23,6 +31,16 @@ export default class RecipesGallery
         }
         document.querySelector('.gallery').innerHTML = html;
     }
+
+    // displayFilter()
+    // {
+    //     console.log(this.filters);
+    //     this.filters.forEach((filter) =>
+    //     {
+    //         console.log("coucou");
+    //         console.log(filter.showClosedDropdown());
+    //     });
+    // }
 
     hydrate(data)
     {
@@ -81,6 +99,7 @@ export default class RecipesGallery
     start(data)
     {
         this.hydrate(data);
+        // this.displayFilter();
         this.display();
         this.listenForSearch();
     }

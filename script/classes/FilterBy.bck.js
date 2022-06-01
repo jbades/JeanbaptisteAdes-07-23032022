@@ -1,18 +1,25 @@
-export default class FilterBy
+export default class FilterByAppliance
 {
-    constructor(gallery, settings)
+    constructor(gallery)
     {
         this.gallery = gallery;
         this.all = new Set();
         this.filtered = [];
         this.selection = [];
+        // this.filteredRecipe = this.gallery.recipeList;
         this.item =
         {
-            name: settings.name,
-            heading: settings.heading,
-            placeholder: settings.placeholder,
-            bgcolor: settings.bgcolor
+            name: 'appliance',
+            heading: 'Appareil',
+            placeholder: 'Rechercher un appareil'
         };
+        // this.searchedIngredient = [];
+    }
+
+    bringBackItemToList(ingr)
+    {
+        this.filtered.push(ingr);
+        this.filtered =  this.filtered.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     }
 
     buildDropdownList()
@@ -28,6 +35,7 @@ export default class FilterBy
     displayItems()
     {
         document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
+        // this.listenForSelect();
     }
 
     escapeFilter(event)
@@ -52,6 +60,23 @@ export default class FilterBy
         this.filtered = result;
     }
 
+    filterRecipe(recipes)
+    {
+        return [...(recipes)].filter((recipe) =>
+        {
+            let countMatch = 0;
+            this.matchSelection(recipe).filter((matchObj) => 
+            {
+                if (matchObj == true)
+                {
+                    countMatch++;
+                };
+            });
+            
+            return (countMatch == this.selection.length)
+        });
+    }
+
     listenEscToExitFilter()
     {
         document.addEventListener('keydown', this.escapeFilter.bind(this));
@@ -59,9 +84,10 @@ export default class FilterBy
 
     listenExitButton()
     {
+        // document.querySelector('.exit-filter').addEventListener('click', this.escapeFilter());
+        
         document.querySelector('.exit-filter').addEventListener('click', () => 
         {
-            console.log("coucou");
             this.showClosedDropdown();
             this.filtered = this.all;
             this.listenForDropdownOpening();
@@ -71,6 +97,8 @@ export default class FilterBy
 
     listenForClickOutsideDropdown()
     {
+        // document.querySelector(`.filter__blocker`).addEventListener('click', this.escapeFilter());
+
         document.querySelector('.filter__blocker').addEventListener('click', () => 
         {
             this.showClosedDropdown();
@@ -82,7 +110,7 @@ export default class FilterBy
 
     listenForDropdownOpening()
     {
-        document.querySelector(`[data-filter=${this.item.heading}]`).addEventListener('click', () => 
+        document.querySelector('.filter__welcome').addEventListener('click', () => 
         {
             this.openDropdown();
             this.filtered = this.all;
@@ -103,9 +131,24 @@ export default class FilterBy
             this.filterItems(e);
             this.displayItems();
             this.listenForSelect();
+            // this.removeEscToExitFilterListener();
         });
     }
 
+    // listenForSearchedIngredient()
+    // {
+    //     document.querySelector('#searchzone').addEventListener('input', (el) =>
+    //     {
+    //         this.gallery.filtered.forEach((recipe) =>
+    //         {
+    //             recipe.ingredient.forEach((ingredient) =>
+    //             {
+    //                 this.searchedIngredient.push(ingredient.ingredient);
+    //             });
+    //         });
+    //     });
+    // }
+    
     listenForSelect()
     {
         document.querySelectorAll('.filter__item').forEach(el =>
@@ -118,7 +161,7 @@ export default class FilterBy
                 this.listenForUnselect();
                 this.gallery.filtered = this.filterRecipe(this.gallery.filtered);
                 this.gallery.display();
-                this.collect();
+                this.sort();
                 this.showClosedDropdown();
                 this.listenForDropdownOpening();
             });
@@ -135,12 +178,26 @@ export default class FilterBy
                     this.showSelection();
                     this.gallery.filtered = this.filterRecipe(this.gallery.all);
                     this.gallery.display();
-                    this.collect();
+                    this.sort();
                     this.showClosedDropdown();
                     this.listenForDropdownOpening();
                     this.listenForUnselect();
                 });
             });
+    }
+
+    matchSelection(recipe)
+    {
+        let applMatchList = [];
+        console.log(recipe);
+        recipe.ingredientList.filter((appliance) =>
+        {
+            let applMatchTest = this.selection.some((selection) => appliance.ingredient.includes(selection));
+            // let ingrMatchTest = ingredient.ingredient.includes((selection) => this.selection == selection );
+            applMatchList.push(applMatchTest);
+            // console.log(this.selection, ingredient.ingredient, ingrMatchTest, applMatchList);
+        });
+        return applMatchList;
     }
 
     openDropdown()
@@ -164,6 +221,11 @@ export default class FilterBy
         document.querySelector('.filter__bar').innerHTML = html;
     }
 
+    // removeEscToExitFilterListener()
+    // {
+    //    document.removeEventListener('keydown', this.listenEscToExitFilter());
+    // }
+
     removeItemFromList(e)
     {
         this.filtered.splice(this.filtered.indexOf(e), 1);
@@ -175,36 +237,30 @@ export default class FilterBy
         this.selection.splice(this.selection.indexOf(e), 1);
     }
 
+    removeTag(ingr)
+    {
+        let div = document.querySelector(`div[data-id="${ingr}"]`);
+        div.parentNode.removeChild(div);
+    }
+
     select(el)
     {
         if (!this.selection.includes(el))
         {
-            this.selection.push(el.toLowerCase());
+            this.selection.push(el);
         }
     }
 
     showClosedDropdown()
     {
-        // let html = 
-        // `
-        //     <button class="filter__welcome d-flex flex-row flex-nowrap justify-content-between align-items-center filter__btn bg-primary text-white rounded">
-        //         <span class="h5">${this.item.heading}</span>
-        //         <i class="fa fa-chevron-down" aria-hidden="true"></i> 
-        //     </button>
-        // `;
-        // document.querySelector('.filter__bar').innerHTML = html;
-        
-        let button = document.createElement('button');
-        button.classList.add('filter__welcome', 'd-flex', 'flex-row', 'flex-nowrap', 'justify-content-between', 'align-items-center', 'filter__btn', `${this.item.bgcolor}`, 'text-white', 'rounded');
-        button.setAttribute('data-filter', `${this.item.heading}`);
-        document.querySelector('.filter__bar').appendChild(button);
         let html = 
         `
-            <span class="h5">${this.item.heading}</span>
-            <i class="fa fa-chevron-down" aria-hidden="true"></i> 
+            <button class="filter__welcome d-flex flex-row flex-nowrap justify-content-between align-items-center filter__btn bg-primary text-white rounded">
+                <span class="h5">${this.item.heading}</span>
+                <i class="fa fa-chevron-down" aria-hidden="true"></i> 
+            </button>
         `;
-        document.querySelector(`[data-filter=${this.item.heading}]`).innerHTML = html;
-
+        document.querySelector('.filter__bar').innerHTML = html;
     }
 
     showSelection()
@@ -223,9 +279,62 @@ export default class FilterBy
         document.querySelector('.filter__tag').innerHTML = html;
     }
 
-    start()
+    sort()
     {
-        this.collect();
+        this.all = new Set();
+
+        this.gallery.filtered.forEach(recipe => 
+        {
+            this.all.add(recipe.appliance.toLowerCase());
+        });
+    }
+
+    sort(el)
+    {
+     //     console.log(el);
+     //     switch (el)
+     //    {
+     //        case 'ingredient':
+     //             console.log('cas ingredient');
+     //             this.all = new Set();
+ 
+     //            this.gallery.filtered.forEach(recipe => 
+     //            {
+     //                recipe.ingredientList.forEach(item => 
+     //                    {
+     //                        this.all.add(item.ingredient.toLowerCase());
+     //                    });
+     //            });
+     //            break;
+     //        case 'appliance':
+     //             console.log('cas appliance');
+     //             this.all = new Set();
+ 
+     //            this.gallery.filtered.forEach(recipe => 
+     //            {
+     //                this.all.add(recipe.appliance.toLowerCase());
+     //            });
+     //            break;
+     //        case 'ustensil':
+     //             console.log('cas ustensil');
+     //             this.all = new Set();
+ 
+     //            this.gallery.filtered.forEach(recipe => 
+     //                {
+     //                    recipe.ustensils.forEach(ingredient => 
+     //                        {
+     //                            this.all.add(ingredient.toLowerCase());
+     //                        });
+     //                });
+     //        default:
+     //             console.log("erreur");
+     //    }
+    }
+
+   start()
+    {
+        // this.gallery.listenForSearch();
+        this.sort();
         this.showClosedDropdown();
         this.listenForDropdownOpening();
         this.listenEscToExitFilter();
