@@ -20,22 +20,21 @@ export default class FilterBy
         let html = '';
         this.filtered.forEach(item => 
         {
-            html += `<button class="filter__item border-0 bg-transparent" data-id="${item}">${item}</button>`;
+            html += `<button class="filter__item border-0 bg-transparent" data-item-id="${item}">${item}</button>`;
         });
         return html;
     }
 
     displayItems()
     {
-        document.querySelector('.filter__item-list').innerHTML = this.buildDropdownList();
+        document.querySelector(`[data-filter=${this.item.name}] .filter__item-list`).innerHTML = this.buildDropdownList();
     }
 
     escapeFilter(event)
     {
         if (event.key === "Escape")
         {
-            this.showClosedDropdown();
-            this.listenForDropdownOpening();
+            this.closeDropdown();
             document.removeEventListener('keydown', this.escapeFilter.bind(this));
         };
     }
@@ -59,10 +58,9 @@ export default class FilterBy
 
     listenExitButton()
     {
-        document.querySelector('.exit-filter').addEventListener('click', () => 
+        document.querySelector(`[data-filter=${this.item.name}] .filter__exit`).addEventListener('click', () => 
         {
-            console.log("coucou");
-            this.showClosedDropdown();
+            this.closeDropdown();
             this.filtered = this.all;
             this.listenForDropdownOpening();
             this.listenForSelect();
@@ -71,9 +69,10 @@ export default class FilterBy
 
     listenForClickOutsideDropdown()
     {
-        document.querySelector('.filter__blocker').addEventListener('click', () => 
+        document.querySelector(`:not([data-filter=${this.item.name}])`).addEventListener('click', () => 
         {
-            this.showClosedDropdown();
+            console.log("coucou");
+            this.closeDropdown();
             this.filtered = this.all;
             this.listenForDropdownOpening();
             this.listenForSelect();
@@ -82,7 +81,7 @@ export default class FilterBy
 
     listenForDropdownOpening()
     {
-        document.querySelector(`[data-filter=${this.item.heading}]`).addEventListener('click', () => 
+        document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).addEventListener('click', () => 
         {
             this.openDropdown();
             this.filtered = this.all;
@@ -90,9 +89,9 @@ export default class FilterBy
             document.querySelector(`#search-${this.item.name}`).focus();
             this.listenExitButton();
             this.listenEscToExitFilter();
-            this.listenForFilterSearch();
-            this.listenForClickOutsideDropdown();
+            // this.listenForClickOutsideDropdown();
             this.listenForSelect();
+            this.listenForFilterSearch();
         });
     }
 
@@ -100,6 +99,7 @@ export default class FilterBy
     {
         document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
         {
+            console.log(e);
             this.filterItems(e);
             this.displayItems();
             this.listenForSelect();
@@ -108,18 +108,18 @@ export default class FilterBy
 
     listenForSelect()
     {
-        document.querySelectorAll('.filter__item').forEach(el =>
+       document.querySelectorAll(`[data-filter=${this.item.name}] .filter__item`).forEach(el =>
         {
             el.addEventListener('click', (e) =>
             {
-                const needle = e.target.getAttribute('data-id');
+                const needle = e.target.getAttribute('data-item-id');
                 this.select(needle);
+                console.log(this.selection);
                 this.showSelection();
                 this.listenForUnselect();
                 this.gallery.filtered = this.filterRecipe(this.gallery.filtered);
                 this.gallery.display();
                 this.collect();
-                this.showClosedDropdown();
                 this.listenForDropdownOpening();
             });
         });
@@ -129,14 +129,15 @@ export default class FilterBy
     {
         this.selection.forEach(item =>
             {
-                document.querySelector(`div[data-id="${item}"] .tag__icon`).addEventListener('click', () =>
+                document.querySelector(`div[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
                     this.removeItemFromSelection(item);
+                    console.log(this.selection);
                     this.showSelection();
+                    console.log(this.gallery.all, this.filterRecipe(this.gallery.all));
                     this.gallery.filtered = this.filterRecipe(this.gallery.all);
                     this.gallery.display();
                     this.collect();
-                    this.showClosedDropdown();
                     this.listenForDropdownOpening();
                     this.listenForUnselect();
                 });
@@ -145,23 +146,14 @@ export default class FilterBy
 
     openDropdown()
     {
-        let html = 
-        `
-            <div class="filter__blocker"></div>
-            <div class="filter__clicked d-flex flex-column flex-nowrap bg-primary text-white rounded p-3">
-                <div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
-                    <input
-                        id="search-${this.item.name}"
-                        name="search-${this.item.name}"
-                        class="forced-placeholder text-light w-75 bg-transparent border-0"
-                        placeholder="${this.item.placeholder}"
-                    />
-                    <i class="exit-filter fa fa-chevron-up" aria-hidden="true"></i> 
-                </div>
-                <div class="filter__item-list d-flex flex-column flex-wrap"></div>
-            </div>
-        `;
-        document.querySelector('.filter__bar').innerHTML = html;
+        document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).style.display = 'none';
+        document.querySelector(`[data-filter=${this.item.name}] .filter__clicked`).style.display = 'flex';
+    }
+
+    closeDropdown()
+    {
+        document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).style.display = 'flex';
+        document.querySelector(`[data-filter=${this.item.name}] .filter__clicked`).style.display = 'none';
     }
 
     removeItemFromList(e)
@@ -183,28 +175,30 @@ export default class FilterBy
         }
     }
 
-    showClosedDropdown()
+    async showButton()
     {
-        // let html = 
-        // `
-        //     <button class="filter__welcome d-flex flex-row flex-nowrap justify-content-between align-items-center filter__btn bg-primary text-white rounded">
-        //         <span class="h5">${this.item.heading}</span>
-        //         <i class="fa fa-chevron-down" aria-hidden="true"></i> 
-        //     </button>
-        // `;
-        // document.querySelector('.filter__bar').innerHTML = html;
-        
-        let button = document.createElement('button');
-        button.classList.add('filter__welcome', 'd-flex', 'flex-row', 'flex-nowrap', 'justify-content-between', 'align-items-center', 'filter__btn', `${this.item.bgcolor}`, 'text-white', 'rounded');
-        button.setAttribute('data-filter', `${this.item.heading}`);
-        document.querySelector('.filter__bar').appendChild(button);
         let html = 
         `
-            <span class="h5">${this.item.heading}</span>
-            <i class="fa fa-chevron-down" aria-hidden="true"></i> 
+            <div class="filter__wrapper" data-filter=${this.item.name}>
+                <button class="filter__welcome ${this.item.bgcolor} flex-row flex-nowrap justify-content-between align-items-center filter__btn text-white rounded">
+                    <span class="h5">${this.item.heading}</span>
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i> 
+                </button>
+                <div class="filter__clicked ${this.item.bgcolor} flex-column flex-nowrap text-white rounded p-3">
+                    <div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
+                        <input
+                        id="search-${this.item.name}"
+                        name="search-${this.item.name}"
+                        class="forced-placeholder text-light w-75 bg-transparent border-0"
+                        placeholder="${this.item.placeholder}"
+                        >
+                        <i class="filter__exit fa fa-chevron-up" aria-hidden="true"></i> 
+                    </div>
+                    <div class="filter__item-list d-flex flex-column flex-wrap"></div>
+                </div>
+            </div>
         `;
-        document.querySelector(`[data-filter=${this.item.heading}]`).innerHTML = html;
-
+        document.querySelector('.filter__bar').innerHTML += html;
     }
 
     showSelection()
@@ -214,7 +208,7 @@ export default class FilterBy
             {
                 html +=
                 `
-                    <div class="tag__wrapper d-flex flex-row flex-nowrap align-items-center bg-primary rounded p-3" data-id='${item}'>
+                    <div class="tag__wrapper ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded p-3" data-item-id='${item}'>
                         <div class="tag__text text-white bg-transparent border-0">${item}</div>
                         <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
                     </div>
@@ -223,11 +217,15 @@ export default class FilterBy
         document.querySelector('.filter__tag').innerHTML = html;
     }
 
-    start()
+    async start()
     {
         this.collect();
-        this.showClosedDropdown();
+        await this.showButton();
         this.listenForDropdownOpening();
-        this.listenEscToExitFilter();
+        // window.setTimeout(() =>
+        // {
+        //     this.listenForDropdownOpening();
+        // }, 500);
+        // this.listenEscToExitFilter();
     }
 }

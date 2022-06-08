@@ -10,7 +10,7 @@ export default class FilterByIngredient extends FilterBy
             placeholder: 'Rechercher un ingrédient',
             bgcolor: 'bg-primary'
         });
-    }
+   }
 
     collect()
     {
@@ -25,15 +25,25 @@ export default class FilterByIngredient extends FilterBy
         this.all = [...(this.all)].sort((a, b) => a.localeCompare(b));
     }
 
-    filterItems(e)
+    filterRecipe(recipes)
     {
-        const needle = e.target.value;
-        const haystack = [...(this.all)];
-
-        let result = haystack.filter(item => 
+        return [...(recipes)].filter((recipe) =>
+        {
+            let count = 0;
+            recipe.ingredientList.forEach((objIngr) =>
             {
-                return (item.toLowerCase()).includes(needle.toLowerCase());
+                if(this.selection.includes(objIngr.ingredient))
+                {
+                    count++;
+                }
             });
-        this.filtered = result;
+
+            if (count == this.selection.length)
+            {
+                return true;
+            }
+
+            return false;
+        });
     }
 }

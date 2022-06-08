@@ -15,7 +15,6 @@ export default class FilterByAppliance extends FilterBy
     collect()
     {
         this.all = new Set();
-
         this.gallery.filtered.forEach(recipe => 
         {
             this.all.add(recipe.appliance.toLowerCase());

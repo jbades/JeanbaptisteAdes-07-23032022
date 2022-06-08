@@ -1,7 +1,6 @@
 import Recipe from "./Recipe.js";
-import FilterBy from "./FilterBy.js";
 
-export default class RecipesGallery
+export default class Recipes
 {
     constructor()
     {
@@ -10,11 +9,11 @@ export default class RecipesGallery
         this.filters = [];
    }
 
-   addFilter(filter)
-   {
+    addFilter(filter)
+    {
        this.filters.push(filter);
        filter.start();
-   }
+    }
 
     display()
     {
@@ -32,13 +31,11 @@ export default class RecipesGallery
         document.querySelector('.gallery').innerHTML = html;
     }
 
-    // displayFilter()
+    // filter()
     // {
-    //     console.log(this.filters);
-    //     this.filters.forEach((filter) =>
+    //     this.filters.forEach(() =>
     //     {
-    //         console.log("coucou");
-    //         console.log(filter.showClosedDropdown());
+
     //     });
     // }
 
