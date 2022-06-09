@@ -116,12 +116,7 @@ export default class FilterBy
                 this.showSelection();
                 this.listenForUnselect();
                 this.gallery.filter();
-                // console.log(this.gallery.filtered);
-                // this.gallery.filtered = this.filterRecipe(this.gallery.filtered);
-                // console.log(this.gallery.filtered);
-                // this.gallery.display();
-
-                // this.collect();
+                this.collect();
                 // this.listenForDropdownOpening();
             });
         });
