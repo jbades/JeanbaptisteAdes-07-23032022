@@ -35,7 +35,7 @@ export default class Recipes
     {
         this.filters.forEach((filter) =>
         {
-            filter = filter.filterRecipe(filter.gallery.filtered);
+            this.filtered = filter.filterRecipe(filter.gallery.filtered);
         });
         this.display();
     }

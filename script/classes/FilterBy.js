@@ -99,7 +99,6 @@ export default class FilterBy
     {
         document.querySelector(`#search-${this.item.name}`).addEventListener('input', (e) => 
         {
-            console.log(e);
             this.filterItems(e);
             this.displayItems();
             this.listenForSelect();
@@ -117,8 +116,13 @@ export default class FilterBy
                 this.showSelection();
                 this.listenForUnselect();
                 this.gallery.filter();
-                this.collect();
-                this.listenForDropdownOpening();
+                // console.log(this.gallery.filtered);
+                // this.gallery.filtered = this.filterRecipe(this.gallery.filtered);
+                // console.log(this.gallery.filtered);
+                // this.gallery.display();
+
+                // this.collect();
+                // this.listenForDropdownOpening();
             });
         });
     }
