@@ -31,13 +31,14 @@ export default class Recipes
         document.querySelector('.gallery').innerHTML = html;
     }
 
-    // filter()
-    // {
-    //     this.filters.forEach(() =>
-    //     {
-
-    //     });
-    // }
+    filter()
+    {
+        this.filters.forEach((filter) =>
+        {
+            filter = filter.filterRecipe(filter.gallery.filtered);
+        });
+        this.display();
+    }
 
     hydrate(data)
     {
@@ -96,8 +97,7 @@ export default class Recipes
     start(data)
     {
         this.hydrate(data);
-        // this.displayFilter();
-        this.display();
+        this.display(); 
         this.listenForSearch();
     }
 

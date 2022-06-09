@@ -114,11 +114,9 @@ export default class FilterBy
             {
                 const needle = e.target.getAttribute('data-item-id');
                 this.select(needle);
-                console.log(this.selection);
                 this.showSelection();
                 this.listenForUnselect();
-                this.gallery.filtered = this.filterRecipe(this.gallery.filtered);
-                this.gallery.display();
+                this.gallery.filter();
                 this.collect();
                 this.listenForDropdownOpening();
             });
@@ -132,9 +130,7 @@ export default class FilterBy
                 document.querySelector(`div[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
                     this.removeItemFromSelection(item);
-                    console.log(this.selection);
                     this.showSelection();
-                    console.log(this.gallery.all, this.filterRecipe(this.gallery.all));
                     this.gallery.filtered = this.filterRecipe(this.gallery.all);
                     this.gallery.display();
                     this.collect();
