@@ -13,6 +13,12 @@ export default class FilterBy
             placeholder: settings.placeholder,
             bgcolor: settings.bgcolor
         };
+        this.closeHandler = (e) => 
+        {
+            // console.log(this) 
+            // pourquoi doit attendre l'event pour se déclencher ?
+            this.closeDropdown(e);
+        }
     }
 
     buildDropdownList()
@@ -20,7 +26,11 @@ export default class FilterBy
         let html = '';
         this.filtered.forEach(item => 
         {
-            html += `<button class="filter__item border-0 bg-transparent" data-item-id="${item}">${item}</button>`;
+            html += `
+                <li>
+                    <button class="filter__item border-0 bg-transparent" data-item-id="${item}">${item}</button>
+                </li>
+            `;
         });
         return html;
     }
@@ -28,15 +38,6 @@ export default class FilterBy
     displayItems()
     {
         document.querySelector(`[data-filter=${this.item.name}] .filter__item-list`).innerHTML = this.buildDropdownList();
-    }
-
-    escapeFilter(event)
-    {
-        if (event.key === "Escape")
-        {
-            this.closeDropdown();
-            document.removeEventListener('keydown', this.escapeFilter.bind(this));
-        };
     }
 
     filterItems(e)
@@ -53,45 +54,35 @@ export default class FilterBy
 
     listenEscToExitFilter()
     {
-        document.addEventListener('keydown', this.escapeFilter.bind(this));
+        document.addEventListener('keydown', this.closeHandler);
     }
 
     listenExitButton()
     {
-        document.querySelector(`[data-filter=${this.item.name}] .filter__exit`).addEventListener('click', () => 
-        {
-            this.closeDropdown();
-            this.filtered = this.all;
-            this.listenForDropdownOpening();
-            this.listenForSelect();
-        });
+        document.querySelector(`[data-filter=${this.item.name}] .filter__exit`).addEventListener('click', this.closeHandler);
     }
 
     listenForClickOutsideDropdown()
     {
-        document.querySelector(`:not([data-filter=${this.item.name}])`).addEventListener('click', () => 
-        {
-            console.log("coucou");
-            this.closeDropdown();
-            this.filtered = this.all;
-            this.listenForDropdownOpening();
-            this.listenForSelect();
-        });
+        document.querySelector(`:not([data-filter=${this.item.name}])`).addEventListener('click', this.closeHandler);
     }
 
     listenForDropdownOpening()
     {
         document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).addEventListener('click', () => 
         {
-            this.openDropdown();
-            this.filtered = this.all;
-            this.displayItems();
+            this.showDropdown();
+            this.listenForFilterSearch();
             document.querySelector(`#search-${this.item.name}`).focus();
             this.listenExitButton();
             this.listenEscToExitFilter();
-            // this.listenForClickOutsideDropdown();
+            window.setTimeout(() => //pourquoi est-ce que cela ferme autrement, alors que pas de 'clic' ? Pq async/await ne foncitonne pas ?
+            {
+                this.listenForClickOutsideDropdown();
+            }, 1);
+            this.filtered = this.all;
+            this.displayItems();
             this.listenForSelect();
-            this.listenForFilterSearch();
         });
     }
 
@@ -117,8 +108,9 @@ export default class FilterBy
                 this.listenForUnselect();
                 this.gallery.filter();
                 this.collect();
-                // this.listenForDropdownOpening();
-            });
+                this.displayItems();
+                this.listenForSelect();
+                });
         });
     }
 
@@ -139,13 +131,27 @@ export default class FilterBy
             });
     }
 
-    openDropdown()
+    closeDropdown(event)
+    {
+        if((event.type == 'keydown' && event.key === "Escape") || event.type != 'keydown')
+        {
+            this.hideDropdown();
+            this.listenForDropdownOpening();
+            this.filtered = this.all;
+            this.listenForSelect();
+            document.querySelector(`:not([data-filter=${this.item.name}])`).removeEventListener('click', this.closeHandler);
+            document.removeEventListener('keydown', this.closeHandler);
+            document.querySelector(`[data-filter=${this.item.name}] .filter__exit`).removeEventListener('click', this.closeHandler);
+        }
+    }
+
+    showDropdown()
     {
         document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).style.display = 'none';
         document.querySelector(`[data-filter=${this.item.name}] .filter__clicked`).style.display = 'flex';
     }
 
-    closeDropdown()
+    hideDropdown()
     {
         document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).style.display = 'flex';
         document.querySelector(`[data-filter=${this.item.name}] .filter__clicked`).style.display = 'none';
@@ -189,7 +195,7 @@ export default class FilterBy
                         >
                         <i class="filter__exit fa fa-chevron-up" aria-hidden="true"></i> 
                     </div>
-                    <div class="filter__item-list d-flex flex-column flex-wrap"></div>
+                    <ul class="filter__item-list d-flex flex-column flex-wrap"></ul>
                 </div>
             </div>
         `;
@@ -209,7 +215,7 @@ export default class FilterBy
                     </div>
                 `
             });
-        document.querySelector('.filter__tag').innerHTML = html;
+        document.querySelector(`.filter__tag`).innerHTML = html;
     }
 
     async start()
@@ -217,10 +223,5 @@ export default class FilterBy
         this.collect();
         await this.showButton();
         this.listenForDropdownOpening();
-        // window.setTimeout(() =>
-        // {
-        //     this.listenForDropdownOpening();
-        // }, 500);
-        // this.listenEscToExitFilter();
     }
 }

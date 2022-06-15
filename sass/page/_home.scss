@@ -1,5 +1,6 @@
 .gallery {
     gap: 36px;
+    top: 60px;
 }
 
 .searchbar {
@@ -15,7 +16,7 @@
 
 .recipe-card {
     width: 380px;
-    padding: inherit;
+    padding: 0;
     &__body {
         padding: 20px;
         background-color: #E7E7E7;

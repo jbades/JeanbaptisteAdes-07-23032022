@@ -27,3 +27,10 @@
 - explication syntaxe 'settings' (dépendance)
 - browser web tools : comment voir :placeholder ?
 - fonctionnement :not
+
+16/06/22: 
+- EventListener: comment savoir les EventListener à supprimer ? Comment fonctionnent-ils exactement ? Se cumulent ? Ne sont-ils pas écrasés ?
+- Bien comprendre "Function expression" // callback 
+-- https://stackoverflow.com/questions/48328184/addeventlistener-inside-constructor-es6-class-get-fired-ones-on-init-and-never-a
+-- https://medium.com/@bigcatplichta/javascript-use-bind-to-dynamically-add-and-remove-event-listeners-d6b443877a73/#f630
+

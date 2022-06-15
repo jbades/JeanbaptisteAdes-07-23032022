@@ -1,6 +1,7 @@
 @charset "UTF-8";
 .container {
   max-width: 1230px !important;
+  padding: 0 !important;
 }
 
 /*!
@@ -10718,15 +10719,23 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+html {
+  font-size: 12px;
+}
+
+body {
+  margin: 0 30px;
+}
+
 .header {
-  margin: 25px auto;
+  margin: 20px auto;
 }
 .header img {
   width: 20%;
 }
 
-html {
-  font-size: 12px;
+form {
+  margin: 10px auto;
 }
 
 input[id=searchzone]::placeholder {
@@ -10747,7 +10756,6 @@ input:focus {
 
 .filter__bar {
   gap: 20px;
-  position: absolute;
   z-index: 1;
 }
 .filter__btn {
@@ -10755,6 +10763,7 @@ input:focus {
   height: 19px;
 }
 .filter__clicked {
+  max-height: 70vh;
   display: none;
 }
 .filter__item {
@@ -10763,10 +10772,16 @@ input:focus {
   cursor: pointer;
 }
 .filter__item-list {
-  max-height: 65vh;
   margin-top: 10px;
+  padding-left: 0;
+  overflow: auto;
+  width: 70vh;
+}
+.filter__item-list li {
+  list-style-type: none;
 }
 .filter__tag {
+  margin: 10px auto;
   gap: 10px;
 }
 .filter__welcome {
@@ -10779,10 +10794,6 @@ input:focus {
   display: block;
 }
 
-.section {
-  margin: 30px auto;
-}
-
 .tag__icon {
   font-size: 18px !important;
   cursor: pointer;
@@ -10793,6 +10804,7 @@ input:focus {
 
 .gallery {
   gap: 36px;
+  top: 60px;
 }
 
 .searchbar {
@@ -10808,7 +10820,7 @@ input:focus {
 
 .recipe-card {
   width: 380px;
-  padding: inherit;
+  padding: 0;
 }
 .recipe-card__body {
   padding: 20px;
