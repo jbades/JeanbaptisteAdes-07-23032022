@@ -128,11 +128,11 @@ export default class FilterBy
                     console.log(this.selection);
                     this.createTag();
                     // this.showSelection();
-                    // this.gallery.filtered = this.filterRecipe(this.gallery.all);
-                    // this.gallery.display();
-                    // this.collect();
-                    // this.listenForDropdownOpening();
-                    // this.listenForUnselect();
+                    this.gallery.filtered = this.filterRecipe(this.gallery.all);
+                    this.gallery.display();
+                    this.collect();
+                    this.listenForDropdownOpening();
+                    this.listenForUnselect();
                 });
             });
     }
