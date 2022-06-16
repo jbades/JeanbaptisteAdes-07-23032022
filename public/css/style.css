@@ -10780,10 +10780,6 @@ input:focus {
 .filter__item-list li {
   list-style-type: none;
 }
-.filter__tag {
-  margin: 10px auto;
-  gap: 10px;
-}
 .filter__welcome {
   display: flex;
   cursor: pointer;
@@ -10794,11 +10790,18 @@ input:focus {
   display: block;
 }
 
+.tag__button {
+  gap: 10px;
+}
+.tag__filter-wrapper {
+  gap: 10px;
+}
 .tag__icon {
   font-size: 18px !important;
   cursor: pointer;
 }
 .tag__wrapper {
+  margin: 10px auto;
   gap: 10px;
 }
 

@@ -33,4 +33,5 @@
 - Bien comprendre "Function expression" // callback 
 -- https://stackoverflow.com/questions/48328184/addeventlistener-inside-constructor-es6-class-get-fired-ones-on-init-and-never-a
 -- https://medium.com/@bigcatplichta/javascript-use-bind-to-dynamically-add-and-remove-event-listeners-d6b443877a73/#f630
+- retranscrire ensemble le fonctionnement de 'extend' => les propriétés des objets étendus sont d'abord alimentées, puis la méthode de FilterBy viennent après ?
 

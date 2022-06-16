@@ -9,7 +9,7 @@ export default class FilterByIngredient extends FilterBy
             heading: 'Ingrédient',
             placeholder: 'Rechercher un ingrédient',
             bgcolor: 'bg-primary'
-        });
+            });
    }
 
     collect()
@@ -46,4 +46,32 @@ export default class FilterByIngredient extends FilterBy
             return false;
         });
     }
+
+    select(el)
+    {
+        console.log(this.selection);
+        if (!this.selection.includes(el))
+        {
+            this.selection.push(el.toLowerCase());
+        }
+        console.log(this.selection);
+    }
+
+    createTag()
+    {
+        document.querySelector(`.tag__filter-wrapper[data-filter="${this.item.name}"]`).innerHTML = '';
+        let html = '';
+        this.selection.forEach(item =>
+            {
+                html +=
+                `
+                    <div class="tag__button ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded p-3" data-item-id='${item}'>
+                        <div class="tag__text text-white bg-transparent border-0">${item}</div>
+                        <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
+                    </div>
+                `
+            });
+        document.querySelector(`.tag__filter-wrapper[data-filter="${this.item.name}"]`).innerHTML += html;
+    }
+
 }

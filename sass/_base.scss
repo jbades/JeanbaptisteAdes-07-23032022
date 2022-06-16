@@ -77,10 +77,6 @@ input {
             list-style-type: none;
         }
     }
-    &__tag {
-        margin: 10px auto;
-        gap: 10px;
-    }
     &__welcome {
         display: flex;
         cursor: pointer;
@@ -93,11 +89,18 @@ input {
 }
 
 .tag {
+    &__button {
+        gap: 10px;
+    }
+    &__filter-wrapper {
+        gap: 10px;
+    }
     &__icon {
         font-size: 18px !important;
         cursor: pointer;
     }
     &__wrapper {
+        margin: 10px auto;
         gap: 10px;
     }
 }

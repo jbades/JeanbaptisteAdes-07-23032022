@@ -12,7 +12,19 @@ export default class Recipes
     addFilter(filter)
     {
        this.filters.push(filter);
+       this.createTagWrapper();
        filter.start();
+    }
+
+    createTagWrapper()
+    {
+        let html = '';
+        // console.log(this.filters);
+        this.filters.forEach(filter =>
+        {
+            html = `<div class="tag__filter-wrapper d-flex flex-row flex-nowrap align-items-center" data-filter=${filter.item.name}></div>`
+        });
+        document.querySelector(`.tag__wrapper`).innerHTML += html;
     }
 
     display()

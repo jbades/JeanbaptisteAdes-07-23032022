@@ -11,6 +11,7 @@ export default class FilterBy
             name: settings.name,
             heading: settings.heading,
             placeholder: settings.placeholder,
+            // selection: settings.selection,
             bgcolor: settings.bgcolor
         };
         this.closeHandler = (e) => 
@@ -104,7 +105,8 @@ export default class FilterBy
             {
                 const needle = e.target.getAttribute('data-item-id');
                 this.select(needle);
-                this.showSelection();
+                this.createTag();
+                // this.showSelection();
                 this.listenForUnselect();
                 this.gallery.filter();
                 this.collect();
@@ -120,13 +122,17 @@ export default class FilterBy
             {
                 document.querySelector(`div[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
+                    console.log("on supprime le tag");
+                    console.log(this.selection);
                     this.removeItemFromSelection(item);
-                    this.showSelection();
-                    this.gallery.filtered = this.filterRecipe(this.gallery.all);
-                    this.gallery.display();
-                    this.collect();
-                    this.listenForDropdownOpening();
-                    this.listenForUnselect();
+                    console.log(this.selection);
+                    this.createTag();
+                    // this.showSelection();
+                    // this.gallery.filtered = this.filterRecipe(this.gallery.all);
+                    // this.gallery.display();
+                    // this.collect();
+                    // this.listenForDropdownOpening();
+                    // this.listenForUnselect();
                 });
             });
     }
@@ -168,13 +174,13 @@ export default class FilterBy
         this.selection.splice(this.selection.indexOf(e), 1);
     }
 
-    select(el)
-    {
-        if (!this.selection.includes(el))
-        {
-            this.selection.push(el.toLowerCase());
-        }
-    }
+    // select(el)
+    // {
+    //     if (!this.selection.includes(el))
+    //     {
+    //         this.selection.push(el.toLowerCase());
+    //     }
+    // }
 
     async showButton()
     {
@@ -202,21 +208,42 @@ export default class FilterBy
         document.querySelector('.filter__bar').innerHTML += html;
     }
 
-    showSelection()
-    {
-        let html = '';
-        this.selection.forEach(item =>
-            {
-                html +=
-                `
-                    <div class="tag__wrapper ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded p-3" data-item-id='${item}'>
-                        <div class="tag__text text-white bg-transparent border-0">${item}</div>
-                        <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
-                    </div>
-                `
-            });
-        document.querySelector(`.filter__tag`).innerHTML = html;
-    }
+    // createTagWrapper()
+    // {
+    //     let html = '';
+    //     console.log(recipes.filters);
+    //     this.selection.forEach(item =>
+    //     {
+    //         html +=
+    //         `
+    //             <div class="tag__filter-wrapper d-flex flex-row flex-nowrap align-items-center" data-filter='${this.item.name}'>
+    //             </div>
+    //         `
+    //     });
+    //     document.querySelector(`.tag__wrapper`).innerHTML += html;
+    // }
+
+    // showSelection()
+    // {
+    //     createTagWrapper();
+    //     createTag();
+
+
+    //     document.querySelector(`.tag__wrapper`).innerHTML = '';
+    //     let html = '';
+    //     this.selection.forEach(item =>
+    //         {
+    //             html +=
+    //             `
+    //                 <div class="tag__button ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded p-3" data-item-id='${item}'>
+    //                     <div class="tag__text text-white bg-transparent border-0">${item}</div>
+    //                     <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
+    //                 </div>
+    //             `
+    //         });
+    //     document.querySelector(`.tag__wrapper`).innerHTML += html;
+
+    // }
 
     async start()
     {
