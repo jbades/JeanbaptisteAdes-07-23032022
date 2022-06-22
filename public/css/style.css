@@ -10791,6 +10791,7 @@ input:focus {
 }
 
 .tag__button {
+  padding: 0.5rem 1rem;
   gap: 10px;
 }
 .tag__filter-wrapper {

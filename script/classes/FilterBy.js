@@ -16,8 +16,6 @@ export default class FilterBy
         };
         this.closeHandler = (e) => 
         {
-            // console.log(this) 
-            // pourquoi doit attendre l'event pour se déclencher ?
             this.closeDropdown(e);
         }
     }
@@ -70,17 +68,15 @@ export default class FilterBy
 
     listenForDropdownOpening()
     {
-        document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).addEventListener('click', () => 
+        document.querySelector(`[data-filter=${this.item.name}] .filter__welcome`).addEventListener('click', (e) => 
         {
+            e.stopPropagation();
             this.showDropdown();
             this.listenForFilterSearch();
             document.querySelector(`#search-${this.item.name}`).focus();
             this.listenExitButton();
             this.listenEscToExitFilter();
-            window.setTimeout(() => //pourquoi est-ce que cela ferme autrement, alors que pas de 'clic' ? Pq async/await ne foncitonne pas ?
-            {
-                this.listenForClickOutsideDropdown();
-            }, 1);
+            this.listenForClickOutsideDropdown();
             this.filtered = this.all;
             this.displayItems();
             this.listenForSelect();
@@ -104,14 +100,15 @@ export default class FilterBy
             el.addEventListener('click', (e) =>
             {
                 const needle = e.target.getAttribute('data-item-id');
+                console.log(this.selection);
                 this.select(needle);
+                console.log(this.selection);
                 this.createTag();
-                // this.showSelection();
                 this.listenForUnselect();
                 this.gallery.filter();
-                this.collect();
-                this.displayItems();
-                this.listenForSelect();
+                // this.collect();
+                // this.displayItems();
+                // this.listenForSelect();
                 });
         });
     }
@@ -120,17 +117,17 @@ export default class FilterBy
     {
         this.selection.forEach(item =>
             {
-                document.querySelector(`div[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
+                document.querySelector(`.tag__button[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
                     console.log("on supprime le tag");
                     console.log(this.selection);
                     this.removeItemFromSelection(item);
                     console.log(this.selection);
                     this.createTag();
-                    // this.showSelection();
-                    this.gallery.filtered = this.filterRecipe(this.gallery.all);
-                    this.gallery.display();
-                    this.collect();
+                    // this.gallery.filtered;
+                    this.gallery.filter();
+                    // this.gallery.display();
+                    // this.collect();
                     this.listenForDropdownOpening();
                     this.listenForUnselect();
                 });
@@ -174,14 +171,6 @@ export default class FilterBy
         this.selection.splice(this.selection.indexOf(e), 1);
     }
 
-    // select(el)
-    // {
-    //     if (!this.selection.includes(el))
-    //     {
-    //         this.selection.push(el.toLowerCase());
-    //     }
-    // }
-
     async showButton()
     {
         let html = 
@@ -207,43 +196,6 @@ export default class FilterBy
         `;
         document.querySelector('.filter__bar').innerHTML += html;
     }
-
-    // createTagWrapper()
-    // {
-    //     let html = '';
-    //     console.log(recipes.filters);
-    //     this.selection.forEach(item =>
-    //     {
-    //         html +=
-    //         `
-    //             <div class="tag__filter-wrapper d-flex flex-row flex-nowrap align-items-center" data-filter='${this.item.name}'>
-    //             </div>
-    //         `
-    //     });
-    //     document.querySelector(`.tag__wrapper`).innerHTML += html;
-    // }
-
-    // showSelection()
-    // {
-    //     createTagWrapper();
-    //     createTag();
-
-
-    //     document.querySelector(`.tag__wrapper`).innerHTML = '';
-    //     let html = '';
-    //     this.selection.forEach(item =>
-    //         {
-    //             html +=
-    //             `
-    //                 <div class="tag__button ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded p-3" data-item-id='${item}'>
-    //                     <div class="tag__text text-white bg-transparent border-0">${item}</div>
-    //                     <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
-    //                 </div>
-    //             `
-    //         });
-    //     document.querySelector(`.tag__wrapper`).innerHTML += html;
-
-    // }
 
     async start()
     {

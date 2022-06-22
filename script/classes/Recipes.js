@@ -47,9 +47,15 @@ export default class Recipes
     {
         this.filters.forEach((filter) =>
         {
+            console.log(filter, filter.gallery.filtered);
             this.filtered = filter.filterRecipe(filter.gallery.filtered);
+            console.log(filter, filter.gallery.filtered);
+            filter.collect();   
+            filter.displayItems();
+            filter.listenForSelect();
         });
         this.display();
+        this.filtered = this.all;
     }
 
     hydrate(data)

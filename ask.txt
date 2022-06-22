@@ -35,3 +35,7 @@
 -- https://medium.com/@bigcatplichta/javascript-use-bind-to-dynamically-add-and-remove-event-listeners-d6b443877a73/#f630
 - retranscrire ensemble le fonctionnement de 'extend' => les propriétés des objets étendus sont d'abord alimentées, puis la méthode de FilterBy viennent après ?
 
+
+22/06/22: 
+- front-end se rafraichit automatiquement après qq secondes.
+- FilterBy.js:118 error : supprimer les espaces avec methode .replace(/\s+/g, '') ? Autre solution ? 
