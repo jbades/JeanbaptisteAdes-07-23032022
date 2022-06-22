@@ -94,6 +94,10 @@ export default class Recipes
             } else
             {
                 this.search(el);
+                this.filters.forEach((filter) =>
+                {
+                    filter.collect();
+                });
                 this.display();
                 this.listenEsc();
             }
