@@ -38,4 +38,5 @@
 
 22/06/22: 
 - front-end se rafraichit automatiquement après qq secondes.
-- FilterBy.js:118 error : supprimer les espaces avec methode .replace(/\s+/g, '') ? Autre solution ? 
+- FilterBy.js:118 error : supprimer les espaces avec methode .replace(/\s+/g, '') ? Autre solution ?
+- pb actualisation 2ème filtre (pb : d'abord filtre 1, puis filtre 2) => async/await ? Où ? 
