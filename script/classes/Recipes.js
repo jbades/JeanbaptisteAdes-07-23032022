@@ -19,7 +19,6 @@ export default class Recipes
     createTagWrapper()
     {
         let html = '';
-        // console.log(this.filters);
         this.filters.forEach(filter =>
         {
             html = `<div class="tag__filter-wrapper d-flex flex-row flex-nowrap align-items-center" data-filter=${filter.item.name}></div>`
@@ -47,14 +46,16 @@ export default class Recipes
     {
         this.filters.forEach((filter) =>
         {
-            console.log(filter, filter.gallery.filtered);
-            this.filtered = filter.filterRecipe(filter.gallery.filtered);
-            console.log(filter, filter.gallery.filtered);
+            this.filtered = filter.filterRecipe(this.filtered);
+        });
+        this.display();
+
+        this.filters.forEach((filter) =>
+        {
             filter.collect();   
             filter.displayItems();
             filter.listenForSelect();
         });
-        this.display();
         this.filtered = this.all;
     }
 

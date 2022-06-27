@@ -11,7 +11,6 @@ export default class FilterBy
             name: settings.name,
             heading: settings.heading,
             placeholder: settings.placeholder,
-            // selection: settings.selection,
             bgcolor: settings.bgcolor
         };
         this.closeHandler = (e) => 
@@ -32,6 +31,37 @@ export default class FilterBy
             `;
         });
         return html;
+    }
+
+    closeDropdown(event)
+    {
+        if((event.type == 'keydown' && event.key === "Escape") || event.type != 'keydown')
+        {
+            this.hideDropdown();
+            this.listenForDropdownOpening();
+            this.filtered = this.all;
+            this.listenForSelect();
+            document.querySelector(`:not([data-filter=${this.item.name}])`).removeEventListener('click', this.closeHandler);
+            document.removeEventListener('keydown', this.closeHandler);
+            document.querySelector(`[data-filter=${this.item.name}] .filter__exit`).removeEventListener('click', this.closeHandler);
+        }
+    }
+
+    createTag()
+    {
+        document.querySelector(`.tag__filter-wrapper[data-filter="${this.item.name}"]`).innerHTML = '';
+        let html = '';
+        this.selection.forEach(item =>
+            {
+                html +=
+                `
+                    <div class="tag__button ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded" data-item-id='${item}'>
+                        <div class="tag__text text-white bg-transparent border-0">${item}</div>
+                        <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
+                    </div>
+                `
+            });
+        document.querySelector(`.tag__filter-wrapper[data-filter="${this.item.name}"]`).innerHTML += html;
     }
 
     displayItems()
@@ -106,10 +136,7 @@ export default class FilterBy
                 this.createTag();
                 this.listenForUnselect();
                 this.gallery.filter();
-                // this.collect();
-                // this.displayItems();
-                // this.listenForSelect();
-                });
+            });
         });
     }
 
@@ -119,32 +146,21 @@ export default class FilterBy
             {
                 document.querySelector(`.tag__button[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
-                    console.log("on supprime le tag");
                     console.log(this.selection);
                     this.removeItemFromSelection(item);
                     console.log(this.selection);
                     this.createTag();
-                    // this.gallery.filtered;
-                    this.gallery.filter();
-                    // this.gallery.display();
-                    // this.collect();
-                    this.listenForDropdownOpening();
                     this.listenForUnselect();
-                });
+                    this.gallery.filter();
+               });
             });
     }
 
-    closeDropdown(event)
+    select(el)
     {
-        if((event.type == 'keydown' && event.key === "Escape") || event.type != 'keydown')
+        if (!this.selection.includes(el))
         {
-            this.hideDropdown();
-            this.listenForDropdownOpening();
-            this.filtered = this.all;
-            this.listenForSelect();
-            document.querySelector(`:not([data-filter=${this.item.name}])`).removeEventListener('click', this.closeHandler);
-            document.removeEventListener('keydown', this.closeHandler);
-            document.querySelector(`[data-filter=${this.item.name}] .filter__exit`).removeEventListener('click', this.closeHandler);
+            this.selection.push(el.toLowerCase());
         }
     }
 
