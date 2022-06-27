@@ -130,9 +130,7 @@ export default class FilterBy
             el.addEventListener('click', (e) =>
             {
                 const needle = e.target.getAttribute('data-item-id');
-                console.log(this.selection);
                 this.select(needle);
-                console.log(this.selection);
                 this.createTag();
                 this.listenForUnselect();
                 this.gallery.filter();

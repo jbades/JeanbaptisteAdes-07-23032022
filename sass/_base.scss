@@ -46,10 +46,6 @@ input {
     }
 }
 
-// .forced-placeholder::placeholder {
-//     color:rgba(255,255,255,0.75) !important;
-// }
-
 .filter {
     &__bar {
         gap: 20px;
@@ -72,7 +68,7 @@ input {
         margin-top: 10px;
         padding-left: 0;
         overflow: auto;
-        width: 70vh;
+        width: 27.6vw;
         & li {
             list-style-type: none;
         }
