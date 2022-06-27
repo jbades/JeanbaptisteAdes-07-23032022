@@ -55,7 +55,7 @@ export default class FilterBy
             {
                 html +=
                 `
-                    <div class="tag__button ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded" data-item-id='${item}'>
+                    <div class="tag__button ${this.item.bgcolor} d-flex flex-row flex-nowrap align-items-center rounded" data-item-id="${item}">
                         <div class="tag__text text-white bg-transparent border-0">${item}</div>
                         <i class="tag__icon text-white fa fa-times-circle-o" aria-hidden="true"></i>
                     </div>
@@ -144,9 +144,7 @@ export default class FilterBy
             {
                 document.querySelector(`.tag__button[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
-                    console.log(this.selection);
                     this.removeItemFromSelection(item);
-                    console.log(this.selection);
                     this.createTag();
                     this.listenForUnselect();
                     this.gallery.filter();
