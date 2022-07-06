@@ -6,6 +6,7 @@ export default class Recipes
     {
         this.all = new Set();
         this.filtered = new Set();
+        this.searched = new Set();
         this.filters = [];
    }
 
@@ -48,6 +49,7 @@ export default class Recipes
         {
             this.filtered = filter.filterRecipe(this.filtered);
         });
+        console.log(this.filtered, this.searched);
         this.display();
 
         this.filters.forEach((filter) =>
@@ -84,6 +86,18 @@ export default class Recipes
     {
         document.querySelector('#searchzone').addEventListener('input', (el) =>
         {
+            if (el.target.value.length === 0)
+            {
+                this.filtered = this.all;
+                this.filters.forEach((filter) =>
+                {
+                    filter.collect();
+                });
+                this.display();
+                this.listenEsc();
+                return;
+            }
+
             if (el.target.value.length < 3)
             {
                 let html = 
@@ -91,30 +105,49 @@ export default class Recipes
                     <span>Entrez plus de 3 caractères pour obtenir le résultat de votre recherche.</span>
                 `
                 document.querySelector('.gallery').innerHTML = html;
-
-            } else
-            {
-                this.search(el);
-                this.filters.forEach((filter) =>
-                {
-                    filter.collect();
-                });
-                this.display();
-                this.listenEsc();
+                return;
             }
+
+            this.search(el);
+            // this.altSearch(el);
+            this.filters.forEach((filter) =>
+            {
+                filter.collect();
+            });
+            this.display();
+            this.listenEsc();
         });
     }
 
     search(el)
     {
+        console.time('.search method - ' + el.target.value);
         this.filtered = new Set();
         this.all.forEach((recipe) =>
         {
             if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
             {
                 this.filtered.add(recipe);
+                this.searched = this.filtered;
             }
-       });
+        });
+        console.timeEnd('.search method - ' + el.target.value);
+    }
+
+    altSearch(el)
+    {
+        console.time('.altSearch method - ' + el.target.value);
+        this.filtered = new Set();
+        const all = [...this.all];
+        for (let i = 0; i < all.length; i++)
+        {
+            let recipe = [...this.all][i];
+            if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
+            {
+                this.filtered.add(recipe);
+            }
+       };
+       console.timeEnd('.altSearch method - ' + el.target.value);
     }
 
     start(data)
