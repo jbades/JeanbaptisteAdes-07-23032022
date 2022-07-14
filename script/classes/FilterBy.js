@@ -39,8 +39,6 @@ export default class FilterBy
         {
             this.hideDropdown();
             this.listenForDropdownOpening();
-            // this.filtered = this.all;
-            console.log(this.filtered, this.gallery.searched);
             this.listenForSelect();
             document.querySelector(`:not([data-filter=${this.item.name}])`).removeEventListener('click', this.closeHandler);
             document.removeEventListener('keydown', this.closeHandler);

@@ -5,8 +5,7 @@ export default class Recipes
     constructor()
     {
         this.all = new Set();
-        this.filtered = new Set();
-        this.searched = new Set();
+        this.searchEvent = '';
         this.filters = [];
    }
 
@@ -49,7 +48,6 @@ export default class Recipes
         {
             this.filtered = filter.filterRecipe(this.filtered);
         });
-        console.log(this.filtered, this.searched);
         this.display();
 
         this.filters.forEach((filter) =>
@@ -59,6 +57,7 @@ export default class Recipes
             filter.listenForSelect();
         });
         this.filtered = this.all;
+        this.search(this.searchEvent);
     }
 
     hydrate(data)
@@ -94,6 +93,7 @@ export default class Recipes
                     filter.collect();
                 });
                 this.display();
+                this.listenForSearch();
                 this.listenEsc();
                 return;
             }
@@ -108,13 +108,16 @@ export default class Recipes
                 return;
             }
 
+            this.searchEvent = el; 
             this.search(el);
+            this.filter();
             // this.altSearch(el);
             this.filters.forEach((filter) =>
             {
                 filter.collect();
             });
-            this.display();
+            // this.display();
+            this.listenForSearch();
             this.listenEsc();
         });
     }
@@ -128,7 +131,6 @@ export default class Recipes
             if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
             {
                 this.filtered.add(recipe);
-                this.searched = this.filtered;
             }
         });
         console.timeEnd('.search method - ' + el.target.value);
@@ -156,5 +158,4 @@ export default class Recipes
         this.display(); 
         this.listenForSearch();
     }
-
 }
