@@ -44,22 +44,18 @@ export default class Recipes
 
     filter(event)
     {
-        console.log(event, this.filtered);
         if (!!event)
         {
             this.search(event);
-            // this.altSearch(el);
-            console.log(event.target.value);
+            // this.altSearch(event);
         } else
         {
             this.filtered = this.all;
         }
-        console.log(this.filtered);
         this.filters.forEach((filter) =>
         {
             this.filtered = filter.filterRecipe(this.filtered);
         });
-        console.log(this.filtered);
         this.display();
 
         this.filters.forEach((filter) =>
@@ -139,20 +135,20 @@ export default class Recipes
         console.timeEnd('.search method - ' + event.target.value);
     }
 
-    altSearch(el)
+    altSearch(event)
     {
-        console.time('.altSearch method - ' + el.target.value);
+        console.time('.altSearch method - ' + event.target.value);
         this.filtered = new Set();
         const all = [...this.all];
         for (let i = 0; i < all.length; i++)
         {
             let recipe = [...this.all][i];
-            if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
+            if (recipe.searchName(event) || recipe.searchDescription(event) || recipe.searchIngredients(event))
             {
                 this.filtered.add(recipe);
             }
        };
-       console.timeEnd('.altSearch method - ' + el.target.value);
+       console.timeEnd('.altSearch method - ' + event.target.value);
     }
 
     start(data)
