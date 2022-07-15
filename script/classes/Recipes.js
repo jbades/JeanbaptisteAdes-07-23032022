@@ -46,8 +46,10 @@ export default class Recipes
     {
         if (!!event)
         {
+            console.log(event.target.value, this.filtered);
             this.search(event);
             // this.altSearch(event);
+            console.log(this.filtered);
         } else
         {
             this.filtered = this.all;
@@ -123,6 +125,7 @@ export default class Recipes
 
     search(event)
     {
+        console.log(event.target.value);
         console.time('.search method - ' + event.target.value);
         this.filtered = new Set();
         this.all.forEach((recipe) =>

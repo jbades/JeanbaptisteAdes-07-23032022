@@ -128,11 +128,12 @@ export default class FilterBy
         {
             el.addEventListener('click', (e) =>
             {
+                console.log('on sélectionne');
                 const needle = e.target.getAttribute('data-item-id');
                 this.select(needle);
                 this.createTag();
                 this.listenForUnselect();
-                this.gallery.filter();
+                this.gallery.filter(this.gallery.searchEvent);
             });
         });
     }
@@ -143,6 +144,7 @@ export default class FilterBy
             {
                 document.querySelector(`.tag__button[data-item-id="${item}"] .tag__icon`).addEventListener('click', () =>
                 {
+                    console.log('on désélectionne');
                     this.removeItemFromSelection(item);
                     this.createTag();
                     this.listenForUnselect();
