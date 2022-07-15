@@ -5,8 +5,8 @@ export default class Recipes
     constructor()
     {
         this.all = new Set();
-        this.searchEvent = '';
         this.filters = [];
+        this.searchEvent = '';
    }
 
     addFilter(filter)
@@ -42,8 +42,13 @@ export default class Recipes
         document.querySelector('.gallery').innerHTML = html;
     }
 
-    filter()
+    filter(event)
     {
+        if (!!event)
+        {
+            this.search(event);
+            // this.altSearch(event);
+        }
         this.filters.forEach((filter) =>
         {
             this.filtered = filter.filterRecipe(this.filtered);
@@ -56,8 +61,6 @@ export default class Recipes
             filter.displayItems();
             filter.listenForSelect();
         });
-        this.filtered = this.all;
-        this.search(this.searchEvent);
     }
 
     hydrate(data)
@@ -75,7 +78,6 @@ export default class Recipes
             if (e.key === "Escape")
             {
                 document.querySelector('#searchzone').value = '';
-                this.filtered = this.all;
                 this.display();
             };
         });
@@ -87,14 +89,12 @@ export default class Recipes
         {
             if (el.target.value.length === 0)
             {
-                this.filtered = this.all;
                 this.filters.forEach((filter) =>
                 {
                     filter.collect();
                 });
+                this.filter(el);
                 this.display();
-                this.listenForSearch();
-                this.listenEsc();
                 return;
             }
 
@@ -108,48 +108,44 @@ export default class Recipes
                 return;
             }
 
-            this.searchEvent = el; 
-            this.search(el);
-            this.filter();
-            // this.altSearch(el);
+            this.listenEsc();
+            this.searchEvent = el;
+            this.filter(this.searchEvent);
             this.filters.forEach((filter) =>
             {
                 filter.collect();
             });
-            // this.display();
-            this.listenForSearch();
-            this.listenEsc();
         });
     }
 
-    search(el)
+    search(event)
     {
-        console.time('.search method - ' + el.target.value);
+        console.time('.search method - ' + event.target.value);
         this.filtered = new Set();
         this.all.forEach((recipe) =>
         {
-            if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
+            if (recipe.searchName(event) || recipe.searchDescription(event) || recipe.searchIngredients(event))
             {
                 this.filtered.add(recipe);
             }
         });
-        console.timeEnd('.search method - ' + el.target.value);
+        console.timeEnd('.search method - ' + event.target.value);
     }
 
-    altSearch(el)
+    altSearch(event)
     {
-        console.time('.altSearch method - ' + el.target.value);
+        console.time('.altSearch method - ' + event.target.value);
         this.filtered = new Set();
         const all = [...this.all];
         for (let i = 0; i < all.length; i++)
         {
             let recipe = [...this.all][i];
-            if (recipe.searchName(el) || recipe.searchDescription(el) || recipe.searchIngredients(el))
+            if (recipe.searchName(event) || recipe.searchDescription(event) || recipe.searchIngredients(event))
             {
                 this.filtered.add(recipe);
             }
        };
-       console.timeEnd('.altSearch method - ' + el.target.value);
+       console.timeEnd('.altSearch method - ' + event.target.value);
     }
 
     start(data)

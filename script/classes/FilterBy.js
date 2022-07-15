@@ -146,7 +146,7 @@ export default class FilterBy
                     this.removeItemFromSelection(item);
                     this.createTag();
                     this.listenForUnselect();
-                    this.gallery.filter();
+                    this.gallery.filter(this.gallery.searchEvent);
                });
             });
     }
@@ -212,6 +212,7 @@ export default class FilterBy
     {
         this.collect();
         await this.showButton();
+        this.filtered = this.all;
         this.listenForDropdownOpening();
     }
 }
